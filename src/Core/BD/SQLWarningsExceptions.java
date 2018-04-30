@@ -45,5 +45,4 @@ connection.
             se = se.getNextException();
         }
     }
-    mmmmmmooo
 }
