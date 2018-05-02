@@ -4,6 +4,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 import Core.Client.ObserverClientI;
+import Services.DataUtilities.Data_message;
 
 public class ChatServer extends UnicastRemoteObject implements ObservableServerI {
 

@@ -3,9 +3,11 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 
-import Core.Serveur.DataStorage;
-import Core.Serveur.Data_message;
+
 import Core.Serveur.ObservableServerI;
+import Services.DataUtilities.ArrayListener;
+import Services.DataUtilities.DataStorage;
+import Services.DataUtilities.Data_message;
 
 
 public class Client extends UnicastRemoteObject implements Runnable, ObserverClientI {
@@ -21,7 +23,6 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	/** Data storage and other facilities  */
 	private DataStorage messageStorage;
 	private boolean stateSession;
-	//private boolean sendStatus;
 	
 	
 	
@@ -58,36 +59,17 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
     }
 
     public void disconnectClient() throws RemoteException {
-            Server.broadcastData(new Data_message(idClient, new Date(), new String("has leaved")));
             Server.disconnectClient();
             this.setStateSession(false);
     }
     
+    public void subToMessStorage(ArrayListener listener) {
+    	this.messageStorage.addListener(listener);
+    }
     
-
-    /*
-    private void check() {
-        String text = ClientGUI.field.getText();
-
-        if (ClientGUI.posted) {
-            try {
-                Server.broadcastData(idClient + " : " + text);
-                ClientGUI.posted = false;
-                ClientGUI.field.setText("");
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
+    public String getIdClient() {
+    	return this.idClient;
     }
-
-    private void checkDisconnect() throws RemoteException {
-        if(ClientGUI.disconnected){
-            Server.broadcastData(new Data_message(idClient, new Date(), new String("has leaved")));
-            ClientGUI.disconnected =false;
-            Server.disconnectClient();
-        }
-    }
-    */
     
     /** private methods: Handling the different status of the Client */
 	private boolean isStateSession() {
@@ -98,15 +80,7 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 		this.stateSession = stateSession;
 	}
 	
-	/*
-    private boolean isSendStatus() {
-		return sendStatus;
-	}
 
-	private void setSendStatus(boolean sendStatus) {
-		this.sendStatus = sendStatus;
-	}
-	*/
 	
 	
 	/** END of status handling */

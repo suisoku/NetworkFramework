@@ -14,10 +14,10 @@ import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import Core.Serveur.ArrayListener;
-import Core.Serveur.ChatServer;
-import Core.Serveur.Data_message;
-import Core.Serveur.EventMessage;
+import Core.Serveur.ObservableServerI;
+import Services.DataUtilities.ArrayListener;
+import Services.DataUtilities.Data_message;
+import Services.DataUtilities.EventMessage;
 
 public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 
@@ -48,6 +48,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
     	this.clientService = clientService;
         setUpPanel(this);
         setAddEventListeners();
+        clientService.subToMessStorage(this);
     }
 
     
@@ -133,7 +134,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
             
             /** 	--ADDING HARD STUFF-- */
             try {
-				this.clientService.send(new Data_message("", new Date(), field.getText() ));
+				this.clientService.send(new Data_message(this.clientService.getIdClient(), new Date(), field.getText() ));
 				ClientGUI.posted = false;
                 ClientGUI.field.setText("");
 			} catch (RemoteException e1) {
@@ -149,6 +150,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
             
             /** 	--ADDING HARD STUFF-- */
             try {
+            	this.clientService.send(new Data_message(this.clientService.getIdClient(), new Date(), "has disconnected" ));
 				this.clientService.disconnectClient();
 				ClientGUI.disconnected = false;
 			} catch (RemoteException e1) {
@@ -163,7 +165,12 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
     
     public void message_added(EventMessage e) {
     	
-        ClientGUI.area.append("\n\n" + e.getLastMessage() ); 
+        ClientGUI.area.append("\n\n" + 
+        		e.getLastMessage().getDate() +
+        		" - " +
+        		e.getLastMessage().getId_sender() +
+        		"send : " +
+        		e.getLastMessage().getData().toString() ); 
     }
 
 
@@ -184,7 +191,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
     	/** declaring stuff  */
         
         String chatServerURL = "rmi://localhost/RMIChatServer";
-		ChatServer chatServer = (ChatServer) Naming.lookup(chatServerURL);
+		ObservableServerI chatServer = (ObservableServerI) Naming.lookup(chatServerURL);
 		
         
 		/** threading stuff */

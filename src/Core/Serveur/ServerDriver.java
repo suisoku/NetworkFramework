@@ -7,8 +7,8 @@ class ServerDriver {
 
 	public static void main (String [] args) throws RemoteException, MalformedURLException {
         try {
-        	System.setProperty("java.security.policy","src/java.policy");
-        	System.setSecurityManager(new SecurityManager());
+        	//System.setProperty("java.security.policy","src/java.policy");
+        	//System.setSecurityManager(new SecurityManager());
         	
             java.rmi.registry.LocateRegistry.createRegistry(1099);
             }

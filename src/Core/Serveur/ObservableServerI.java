@@ -3,6 +3,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import Core.Client.ObserverClientI;
+import Services.DataUtilities.Data_message;
 
 public interface ObservableServerI extends Remote {
     void connectClient(ObserverClientI client) throws RemoteException;

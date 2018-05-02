@@ -1,11 +1,10 @@
-package Core.Serveur;
+package Services.DataUtilities;
+
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 
-public class Data_message extends UnicastRemoteObject implements Serializable, DataInterface {
+public class Data_message implements Serializable {
 	
 	/**
 	 * 
@@ -16,32 +15,32 @@ public class Data_message extends UnicastRemoteObject implements Serializable, D
 	private Object data;
 	
 	
-	public Data_message(String id , Date send_date, Object data) throws RemoteException{
+	public Data_message(String id , Date send_date, Object data) {
 		this.id_sender = id ;
 		this.send_date = send_date ;
 		this.data = data ;
 	}
 
 
-	public String getId_sender() throws RemoteException {
+	public String getId_sender()   {
 		return id_sender;
 	}
 
 
-	public Date getDate()throws RemoteException {
+	public Date getDate()  {
 		return send_date;
 	}
 
 
-	public Object getData() throws RemoteException{
+	public Object getData()  {
 		return data;
 	}
 	
-	public void showTime() throws RemoteException {
+	public void showTime()   {
 		System.out.println(send_date);
 	}
 	
-	public void showStringMess() throws RemoteException{
+	public void showStringMess()  {
 		if(data instanceof String) {
 			System.out.println(data);
 		}

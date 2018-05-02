@@ -2,7 +2,9 @@ package Core.Client;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import Core.Serveur.Data_message;
+import Services.DataUtilities.Data_message;
+
+
 
 /**
  * Implemente la capacite d'envoi
