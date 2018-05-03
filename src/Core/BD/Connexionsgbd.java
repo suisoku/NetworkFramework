@@ -4,11 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import Services.Profile.Predicat;
-import Services.Profile.Profile;
-import Services.Profile.Tuple;
-
-
 
 public class Connexionsgbd {
 
@@ -26,12 +21,12 @@ public class Connexionsgbd {
             Class.forName(jdbcDriver);// Get a connection to the database
             Connection conn = DriverManager.getConnection(dbUrl, username, password);
          // *************Teste getProfile ****************************************
-            /*Tuple Profile_Infos;
+          /*  Tuple Profile_Infos;
             Predicat P1 = new Predicat("EMPNO", 7876);
             Profile_Infos = Profile.getProfile(conn, "EMP", P1);
             for (Object o : Profile_Infos) {
               System.out.print(o + "\t ");
-            }*/
+            }
             
             // *************Teste updateProfile ***************************************
             /*HashMap<String,Object> map = new HashMap<String,Object>();
@@ -42,8 +37,8 @@ public class Connexionsgbd {
             Profile.updateProfile(conn, "EMP", P2);*/
             
             // *************Teste deleteProfile ***************************************
-            Predicat P3 = new Predicat("EMPNO", 7902);
-            Profile.deleteProfile(conn, "EMP", P3);
+           /* Predicat P3 = new Predicat("EMPNO", 7902);
+            Profile.deleteProfile(conn, "EMP", P3); */
           
             
             

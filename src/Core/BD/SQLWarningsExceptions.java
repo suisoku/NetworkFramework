@@ -12,7 +12,8 @@ import java.sql.SQLWarning;
  */
 public class SQLWarningsExceptions {
 
-    private static Object se;
+    @SuppressWarnings("unused")
+	private static Object se;
 
     /**
      * Print SQL warnings associated with a database connection.
