@@ -1,4 +1,4 @@
-package Core.Client;
+package AppDemo.Client;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -14,6 +14,7 @@ import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import Core.Client.Client;
 import Core.Serveur.ObservableServerI;
 import Services.DataUtilities.ArrayListener;
 import Services.DataUtilities.Data_message;
@@ -199,8 +200,9 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
         String name = ClientGUI.getUserName(); // Input User
         Client clientService = new Client(chatServer, name); // Crafting clientService
         
-        Thread clientThread = new Thread(clientService); // running the thread
-        clientThread.start();
+        clientService.initializeThread();
+        clientService.threadAccess().start();
+        
         
         new ClientGUI(clientService); // Instantiate GUI with clientService
         

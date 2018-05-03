@@ -24,7 +24,7 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	private DataStorage messageStorage;
 	private boolean stateSession;
 	
-	
+	private Thread main_run ;
 	
     /**
      * Instaciation d'un client renseignant son serveur
@@ -40,11 +40,6 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
         /* instanciating the data pile storage of the messages of this client */
         this.messageStorage = new DataStorage(this.idClient); 
         
-        /* adding the client to the server */
-        Server.connectClient(this);
-        
-        /* calling the server method to broadcast the message */
-        Server.broadcastData(new Data_message(idClient, new Date(), new String("is connected")));
     }
     
     /** Observer Pattern : allow update if server notify() */
@@ -53,14 +48,19 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
         messageStorage.add(message);
     }
     	
-    
+    @Override
     public void send(Data_message message) throws RemoteException {
     	Server.broadcastData(message);
     }
 
+    @Override
     public void disconnectClient() throws RemoteException {
             Server.disconnectClient();
-            this.setStateSession(false);
+            synchronized (this) {
+                this.setStateSession(false);
+                this.notifyAll();
+            }
+           
     }
     
     public void subToMessStorage(ArrayListener listener) {
@@ -83,16 +83,38 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 
 	
 	
-	/** END of status handling */
+	/** END of status handling 
+	 * @throws RemoteException */
 	
+	@Override
+	public void initializeThread() throws RemoteException {
+		
+		/* adding the client to the server */
+        Server.broadcastData(new Data_message(idClient, new Date(), new String("is connected")));
+        
+        /* calling the server method to broadcast the message */
+		Server.connectClient(this);
+		
+		main_run = new Thread(this);
+	}
+	
+	
+	public Thread threadAccess() {
+		return this.main_run;
+	}
 	
 	@Override
     public void run() {
-        //no inspection InfiniteLoopStatement
-        while (this.stateSession == false) {
-        	
-        };
-        System.out.println("End");
+		 System.out.println("Entering run state...");
+		 
+		 synchronized (this) {
+	            while (isStateSession()) {
+	                try {
+	                    this.wait();
+	                } catch (InterruptedException e) {}
+	            }
+	        }
+         System.out.println("Exiting run method");
     }
 
 
