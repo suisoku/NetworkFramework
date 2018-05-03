@@ -89,8 +89,10 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	@Override
     public void run() {
         //no inspection InfiniteLoopStatement
-        while (isStateSession());
-        System.out.println("Program ended");
+        while (this.stateSession == false) {
+        	
+        };
+        System.out.println("End");
     }
 
 
