@@ -43,8 +43,11 @@ public class Profile {
 	}
 	public static void deleteProfile(Connection conn, String table_Name, Predicat predicat) throws SQLException {
 		Statement stmt =conn.createStatement();	
-		stmt.executeUpdate("delete from " + table_Name + " where " + predicat.Name + " = " + predicat.value);
+		String Query="delete from " + table_Name + " where " + 
+		predicat.Name + " = " + predicat.value;
+		stmt.executeUpdate(Query);
+		conn.commit();
 		stmt.close();
-		 conn.commit();
+		
 	}
 }

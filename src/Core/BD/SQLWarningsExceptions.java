@@ -3,7 +3,6 @@ package Core.BD;
 
 
 
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
