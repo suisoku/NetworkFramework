@@ -13,4 +13,5 @@ public interface ObserverClientI extends Remote {
     public void update(Data_message data) throws RemoteException;
     public void send(Data_message message) throws RemoteException;
     public void disconnectClient() throws RemoteException;
+    public void initializeThread() throws RemoteException;
 }

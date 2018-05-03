@@ -1,4 +1,6 @@
-package Core.Serveur;
+ package Core.Serveur;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -6,7 +8,7 @@ import java.util.*;
 import Core.Client.ObserverClientI;
 import Services.DataUtilities.Data_message;
 
-public class ChatServer extends UnicastRemoteObject implements ObservableServerI {
+public class Server extends UnicastRemoteObject implements ObservableServerI {
 
 	/** default serial **/
 	private static final long serialVersionUID = 1L;
@@ -14,7 +16,7 @@ public class ChatServer extends UnicastRemoteObject implements ObservableServerI
 	private final ArrayList<ObserverClientI> chatClients;
     private static int client_count = 0;
 
-    ChatServer() throws RemoteException {
+    public Server() throws RemoteException {
         chatClients = new ArrayList<>();
     }
 
@@ -41,8 +43,12 @@ public class ChatServer extends UnicastRemoteObject implements ObservableServerI
     public void disconnectClient() throws RemoteException {
         client_count--;
     }
-
-
-
+    
+    @Override
+    public void initialize() throws RemoteException, MalformedURLException {
+    	try {java.rmi.registry.LocateRegistry.createRegistry(1099);}
+        catch (Exception e) {e.printStackTrace();}
+        Naming.rebind("RMIChatServer",new Server());
+    }
 
 }

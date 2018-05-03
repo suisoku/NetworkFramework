@@ -5,9 +5,9 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+import AppDemo.Client.ClientGUI;
 import Core.Client.Client;
-import Core.Client.ClientGUI;
-import Core.Serveur.ChatServer;
+import Core.Serveur.Server;
 
 public class noureddine_test_clientServiceGUI {
 
@@ -20,7 +20,7 @@ public class noureddine_test_clientServiceGUI {
     	/** declaring stuff  */
         
         String chatServerURL = "rmi://localhost/RMIChatServer";
-		ChatServer chatServer = (ChatServer) Naming.lookup(chatServerURL);
+		Server chatServer = (Server) Naming.lookup(chatServerURL);
 		
         
 		/** threading stuff */

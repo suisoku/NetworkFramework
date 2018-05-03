@@ -1,11 +1,15 @@
-package Core.Serveur;
+package AppDemo.Server;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.swing.*;
+
+import Core.Serveur.Server;
 
 class ServerGUI extends JFrame implements ActionListener {
 
@@ -23,7 +27,7 @@ class ServerGUI extends JFrame implements ActionListener {
         super("Chat Server");
         setUpWindow();
         addEventListeners();
-        int myLocalVar = ChatServer.getClients();
+        int myLocalVar = Server.getClients();
         clientList.setText("" + myLocalVar);
     }
 
@@ -61,8 +65,14 @@ class ServerGUI extends JFrame implements ActionListener {
             System.exit(0);
         }
         if (source == clients_total) {
-            int myLocalVar = ChatServer.getClients();
+            int myLocalVar = Server.getClients();
             clientList.setText("Total Connected Today: " + myLocalVar);
         }
+    }
+    
+    public static void main(String[] args) throws RemoteException, MalformedURLException {
+    	Server server = new Server();
+    	server.initialize();
+    	new ServerGUI();
     }
 }
