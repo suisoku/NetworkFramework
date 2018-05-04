@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.*;
 import java.text.DateFormat;
@@ -19,6 +20,7 @@ import Core.Serveur.ObservableServerI;
 import Services.DataUtilities.ArrayListener;
 import Services.DataUtilities.Data_message;
 import Services.DataUtilities.EventMessage;
+import Services.DataUtilities.FileData;
 
 public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 
@@ -39,6 +41,14 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
     private static final JButton post = new JButton("Post Message");
     private static final JButton disconnect = new JButton("Disconnect");
     static final JTextArea area = new JTextArea(5, 5);
+    
+    /** ----HARD STUFF TEST---- */
+    private static final JButton upload = new JButton("Upload File");
+    
+
+    /** ---- END OF HARD STUFF TEST---- */
+
+    
 
     
     
@@ -61,6 +71,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
         JPanel panel_south = new JPanel();
         panel_south.add(field);
         panel_south.add(post);
+        panel_south.add(upload);
 
         clientGUI.setResizable(false);
         clientGUI.setVisible(false);
@@ -109,6 +120,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
         field.addActionListener(this);
         post.addActionListener(this);
         disconnect.addActionListener(this);
+        upload.addActionListener(this);
     }
 
     private int generateRandomRGBValue(){
@@ -162,6 +174,24 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
             
             dispose();
         }
+        
+        else if (source == upload) {
+            System.out.println("Uploading ...");
+        
+            FileData fileTest = new FileData("2.jpg" , "3.jpg");
+            	try {
+					fileTest.serializeFile();
+				} catch (IOException e1) {e1.printStackTrace();
+				} finally {
+					try {
+						this.clientService.send(new Data_message(
+								this.clientService.getIdClient(), 
+								new Date(), 
+								fileTest));
+					}catch (RemoteException e1){e1.printStackTrace();}
+				}	
+            	ClientGUI.field.setText("");
+         }
     }
     
     public void message_added(EventMessage e) {
@@ -169,9 +199,18 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
         ClientGUI.area.append("\n\n" + 
         		e.getLastMessage().getDate() +
         		" - " +
-        		e.getLastMessage().getId_sender() +
-        		"send : " +
-        		e.getLastMessage().getData().toString() ); 
+        		e.getLastMessage().getId_sender());
+        
+        
+        if(e.getLastMessage().getData() instanceof String) {
+        	ClientGUI.area.append(" send : " + e.getLastMessage().getData() ); 
+        }
+        
+        else if(e.getLastMessage().getData() instanceof FileData) {
+        	ClientGUI.area.append(" envoi de fichier" ); 
+        	FileData f = (FileData)e.getLastMessage().getData();
+        	try {f.unserializeFile();} catch (IOException e1) {e1.printStackTrace();}
+        }
     }
 
 
