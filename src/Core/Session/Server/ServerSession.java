@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import Core.BD.connection;
 import Core.Serveur.Server;
 import Core.Session.InteractionBD;
+import Core.Session.Sign;
 import Core.Session.User.User;
 import Core.Session.User.InterfaceUser;
 import Services.DataUtilities.Data_message;
@@ -32,9 +33,9 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	}
 	
 	@Override
-	public boolean register(InterfaceUser user) throws RemoteException, SQLException {
-		if(!bd.look(user.getDetails())) {
-			bd.add(user.getDetails());
+	public boolean register(Sign details) throws RemoteException, SQLException {
+		if(!bd.look(details)) {
+			bd.add(details);
 			return true;
 		}
 		else return false;
@@ -51,7 +52,6 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	@Override
 	public synchronized void sendToPool(User user , Data_message data) throws RemoteException {
 		user.update(data);
-	}
-	
+	}	
 
 }
