@@ -2,3 +2,4 @@ Liste des taches [noureddine]
 	Abstract class Data_message , Sendable 
 
 Package Exception --> [Sidson]
+Gèrer le fichier envoyé par le mec qui envoie: il ne doit pas recevoir le fichier

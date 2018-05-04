@@ -13,8 +13,8 @@ public class Server extends UnicastRemoteObject implements ObservableServerI {
 	/** default serial **/
 	private static final long serialVersionUID = 1L;
 	
-	private final ArrayList<ObserverClientI> chatClients;
-    private static int client_count = 0;
+	protected final ArrayList<ObserverClientI> chatClients;
+    protected static int client_count = 0;
 
     public Server() throws RemoteException {
         chatClients = new ArrayList<>();
