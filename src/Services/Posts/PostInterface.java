@@ -1,7 +1,5 @@
 package Services.Posts;
 
-import java.util.List;
-
 public interface PostInterface {
 	
 	public void creer(Post post);

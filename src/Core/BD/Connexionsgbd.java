@@ -37,8 +37,9 @@ public class Connexionsgbd {
             Profile.updateProfile(conn, "EMP", P2);*/
             
             // *************Teste deleteProfile ***************************************
-           /* Predicat P3 = new Predicat("EMPNO", 7902);
-            Profile.deleteProfile(conn, "EMP", P3); */
+            /*Predicat P3 = new Predicat("EMPNO", 7900);
+            Profile.deleteProfile(conn, "EMP", P3);*/
+
           
             
             

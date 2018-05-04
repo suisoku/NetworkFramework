@@ -58,7 +58,8 @@ class ServerGUI extends JFrame implements ActionListener {
         time.setText(dateFormat.format(cal.getTime()));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+	public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == close) {
 
