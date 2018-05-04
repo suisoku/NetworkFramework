@@ -105,7 +105,6 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	@Override
     public void run() {
 		 System.out.println("Entering run state...");
-		 
 		 synchronized (this) {
 	            while (isStateSession()) {
 	                try {
@@ -115,6 +114,4 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	        }
          System.out.println("Exiting run method");
     }
-
-
 }

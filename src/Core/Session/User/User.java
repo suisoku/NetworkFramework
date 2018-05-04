@@ -1,12 +1,13 @@
-package Core.Session;
+package Core.Session.User;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.Iterator;
-
 import Core.Client.Client;
-import Core.Serveur.ObservableServerI;
+import Core.Session.Sign;
+import Core.Session.Server.InterfaceServerSession;
+import Core.Session.User.InterfaceUser;
 import JBeeExceptions.JbeeException;
+import Services.DataUtilities.Data_message;
 
 public class User extends Client implements InterfaceUser{
 
@@ -35,8 +36,14 @@ public class User extends Client implements InterfaceUser{
 	public Sign getDetails() {
 		return this.signInDetails;
 	}
+
+	@Override
+	public void send(Iterable<User> pool, Data_message data) throws RemoteException {
+		
+	}
+	
+
 	
 	
-	
-	
+
 }

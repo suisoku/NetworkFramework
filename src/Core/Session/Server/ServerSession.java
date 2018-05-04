@@ -1,10 +1,13 @@
-package Core.Session;
+package Core.Session.Server;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 import Core.BD.connection;
 import Core.Serveur.Server;
+import Core.Session.InteractionBD;
+import Core.Session.User.User;
+import Core.Session.User.InterfaceUser;
 import Services.DataUtilities.Data_message;
 
 public class ServerSession extends Server implements InterfaceServerSession{
@@ -39,10 +42,13 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	}
 	
 	public synchronized void sendToPool(Iterable<User> pool , Data_message data) throws RemoteException {
-		
+		for(User user : pool) {
+			user.update(data);
+		}
 	}
+	
 	public synchronized void sendToPool(User user , Data_message data) throws RemoteException {
-		
+		user.update(data);
 	}
 	
 

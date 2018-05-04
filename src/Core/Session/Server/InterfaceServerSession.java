@@ -1,9 +1,10 @@
-package Core.Session;
+package Core.Session.Server;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 import Core.Serveur.ObservableServerI;
+import Core.Session.User.InterfaceUser;
 
 public interface InterfaceServerSession extends ObservableServerI {
 

@@ -1,6 +1,6 @@
 package Services.Groups;
 
-import Core.Session.InterfaceUser;
+import Core.Session.User.User.InterfaceUser;
 
 public class Groupe extends AbstractGroupe{
 
