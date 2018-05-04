@@ -138,7 +138,8 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
         message.setText("Joined: " + dateFormat.format(cal.getTime()));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+	public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
         if (source == post) {
@@ -194,7 +195,8 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
          }
     }
     
-    public void message_added(EventMessage e) {
+    @Override
+	public void message_added(EventMessage e) {
     	
         ClientGUI.area.append("\n\n" + 
         		e.getLastMessage().getDate() +

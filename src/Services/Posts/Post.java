@@ -1,10 +1,8 @@
 package Services.Posts;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-// on doit utiliser de la sérialisation pour stokcer nos posts vu qu'on utilise le RMI
+// on doit utiliser de la sï¿½rialisation pour stokcer nos posts vu qu'on utilise le RMI
 public class Post implements java.io.Serializable {
 
 	private int idPost;
@@ -12,10 +10,10 @@ public class Post implements java.io.Serializable {
 	private String sujet;
 	private Date datePost;
 	private String contenu; // on verra pour les images et les videos
-	// private String status; // public ou privé
+	// private String status; // public ou privï¿½
 
-	// pour les commentaires j'essaie ça:
-	// stocke ses éléments dans une table de hachage à l'aide de Hashdet,
+	// pour les commentaires j'essaie ï¿½a:
+	// stocke ses ï¿½lï¿½ments dans une table de hachage ï¿½ l'aide de Hashdet,
 	// cela empeche la duplication.
 	// private Set<Comment> comments = new HashSet<Comment>(0);
 
@@ -25,7 +23,7 @@ public class Post implements java.io.Serializable {
 	}
 
 	public Post(String sujet, Date datePost, String contenu) {
-		// d'autres attributs à ajouter une fois le truc marche
+		// d'autres attributs ï¿½ ajouter une fois le truc marche
 		this.sujet = sujet;
 		this.datePost = datePost;
 		this.contenu = contenu;
@@ -63,6 +61,7 @@ public class Post implements java.io.Serializable {
 		this.contenu = contenu;
 	}
 
+	@Override
 	public String toString() {
 		return "[id:" + this.idPost + ",sujet:" + this.sujet + "]";
 	}
