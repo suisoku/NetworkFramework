@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import Core.Client.Client;
 import Core.Serveur.ObservableServerI;
+import JBeeExceptions.JbeeException;
 
 public class User extends Client implements InterfaceUser{
 
@@ -19,29 +20,23 @@ public class User extends Client implements InterfaceUser{
 	protected boolean authentificated;
 	protected InterfaceServerSession Server = (InterfaceServerSession)this.Server;
 		
-	public User(InterfaceServerSession server, Sign details) throws RemoteException, SQLException {
+	public User(InterfaceServerSession server, Sign details) throws RemoteException, SQLException  {
 		super(server, details.getPseudo()); 
 		
 		this.Server = server;
 		this.signInDetails = details;
 		
 		if(!this.Server.authentication(this)) {
-			throw new Exception("Authentification Failed");
+			throw new JbeeException("Authentification failed");
 		}
-	
+		
 	}
-	
 	
 	public Sign getDetails() {
 		return this.signInDetails;
 	}
-
-	@Override
-	public Iterator<User> iterator() {
-		// TODO Auto-generated method stub
-		return new Iterator<User>() {
-			@Override public boolean hasNext() {return false ;}
-			@Override public User next() {return this;}
-		};
-	}
+	
+	
+	
+	
 }
