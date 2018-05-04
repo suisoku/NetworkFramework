@@ -22,7 +22,7 @@ public class Publication implements Serializable {
 		this.post = post;
 	}
 
-	public String datePost(java.util.Date date2) {
+	public String datePostToString(java.util.Date date2) {
 		java.util.Date date1 = new java.util.Date();
 		long time = ((date1.getTime() - date2.getTime()) / 60000);
 		if (time < 60) {
@@ -39,7 +39,7 @@ public class Publication implements Serializable {
      // ici je dois trouver un moyen comment intéger l'identité du User qui va poster
         
         post.setdatePost(new java.util.Date());
-        postInterface.sauvegarder(post);
+        postInterface.creer(post);
         System.out.println(post);
 
     }
