@@ -14,7 +14,6 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	
 	
 	/** Identification block and connection details*/
-	
 	private static final long serialVersionUID = -3125971307045486820L;
 	private final ObservableServerI Server;
 	private final String idClient;
