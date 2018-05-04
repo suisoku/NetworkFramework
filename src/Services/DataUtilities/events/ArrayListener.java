@@ -1,4 +1,4 @@
-package Services.DataUtilities;
+package Services.DataUtilities.events;
 
 import java.util.EventListener;
 

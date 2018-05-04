@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.event.EventListenerList;
 
+import Services.DataUtilities.events.ArrayListener;
+import Services.DataUtilities.events.EventMessage;
+
 /**
  * 
  * DataStorage : an array list with the capability of firing events when 

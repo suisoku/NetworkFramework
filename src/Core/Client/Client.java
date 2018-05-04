@@ -5,9 +5,9 @@ import java.util.Date;
 
 
 import Core.Serveur.ObservableServerI;
-import Services.DataUtilities.ArrayListener;
 import Services.DataUtilities.DataStorage;
 import Services.DataUtilities.Data_message;
+import Services.DataUtilities.events.ArrayListener;
 
 
 public class Client extends UnicastRemoteObject implements Runnable, ObserverClientI {

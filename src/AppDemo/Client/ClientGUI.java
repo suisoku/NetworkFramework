@@ -17,10 +17,10 @@ import javax.swing.border.EmptyBorder;
 
 import Core.Client.Client;
 import Core.Serveur.ObservableServerI;
-import Services.DataUtilities.ArrayListener;
 import Services.DataUtilities.Data_message;
-import Services.DataUtilities.EventMessage;
 import Services.DataUtilities.FileData;
+import Services.DataUtilities.events.ArrayListener;
+import Services.DataUtilities.events.EventMessage;
 
 public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 

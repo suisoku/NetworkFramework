@@ -39,11 +39,12 @@ public class User extends Client implements InterfaceUser{
 
 	@Override
 	public void send(Iterable<User> pool, Data_message data) throws RemoteException {
-		
+		this.Server.sendToPool(pool, data);
 	}
 	
-
-	
-	
+	@Override
+	public void send(User user, Data_message data) throws RemoteException {
+		this.Server.sendToPool(user, data);
+	}
 
 }

@@ -41,12 +41,14 @@ public class ServerSession extends Server implements InterfaceServerSession{
 		
 	}
 	
+	@Override
 	public synchronized void sendToPool(Iterable<User> pool , Data_message data) throws RemoteException {
 		for(User user : pool) {
 			user.update(data);
 		}
 	}
 	
+	@Override
 	public synchronized void sendToPool(User user , Data_message data) throws RemoteException {
 		user.update(data);
 	}
