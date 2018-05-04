@@ -6,8 +6,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import Services.Profile.Predicat;
-import Services.Profile.Tuple;
 
 public class InteractionBD {
 
@@ -37,41 +35,17 @@ public class InteractionBD {
 	
 	
 	
-	public  boolean add(Sign details) throws SQLException {
+	public  void add(Sign details) throws SQLException {
 		
 		Statement stmt = conn.createStatement();
 		
-		int rs = stmt.executeUpdate(
+		stmt.executeUpdate(
 				"INSERT INTO " +
 				this.table_name + 
 				"VALUES ('"
                 + details.getPseudo() + "','" 
-                + details.getPassword() + "','"
-                + sem.getDejeuner() + "','"
-                + sem.getAnimateur() + "')"); 
-                
+                + details.getPassword() +  "')"); 
 		
-		ResultSetMetaData rsmd = rs.getMetaData();
-		
-		if(rsmd.getColumnCount() == 1) {return true;}
-		else return false;
-		
-		
-	}
-	
-	public static Tuple getProfile(Connection conn, String table_Name, Predicat predicat) throws SQLException {
-		Statement stmt = conn.createStatement();
-		ResultSet rs = stmt.executeQuery("select * from " + table_Name + " where " + predicat.Name + " = " + predicat.value);
-		ResultSetMetaData rsmd = rs.getMetaData();
-		int columnCount = rsmd.getColumnCount();
-		Object[] values = new Object[columnCount];
-		while (rs.next()) {
-			for (int i = 1; i <= columnCount; i++) {
-				values[i-1] = rs.getObject(i);
-			}
-		}
-		rs.close();
 		stmt.close();
-		return new Tuple(values);
 	}
 }
