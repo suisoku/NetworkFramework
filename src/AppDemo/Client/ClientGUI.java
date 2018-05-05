@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.*;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,8 +16,11 @@ import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import Core.Client.Client;
+import Core.Sign;
 import Core.Serveur.ObservableServerI;
+import Core.Session.Server.InterfaceServerSession;
+import Core.Session.User.User;
+import JBeeExceptions.JbeeException;
 import Services.DataUtilities.Data_message;
 import Services.DataUtilities.FileData;
 import Services.DataUtilities.events.ArrayListener;
@@ -26,7 +30,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 
 
 	/** ------------------- Identity related declarations -----------------*/
-	private final Client clientService;
+	private final User clientService;
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -44,7 +48,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
     
     /** ----HARD STUFF TEST---- */
     private static final JButton upload = new JButton("Upload File");
-    
+    static final JTextField fieldUser = new JTextField(20);
 
     /** ---- END OF HARD STUFF TEST---- */
 
@@ -53,7 +57,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
     
     
     
-    public ClientGUI(Client clientService) {
+    public ClientGUI(User clientService) {
     	
         super("ClientGUI Chat");
     	this.clientService = clientService;
@@ -70,6 +74,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
         panel_north.add(message);
         JPanel panel_south = new JPanel();
         panel_south.add(field);
+        panel_south.add(fieldUser);
         panel_south.add(post);
         panel_south.add(upload);
 
@@ -118,6 +123,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 
     private void setAddEventListeners(){
         field.addActionListener(this);
+        fieldUser.addActionListener(this);
         post.addActionListener(this);
         disconnect.addActionListener(this);
         upload.addActionListener(this);
@@ -148,7 +154,13 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
             
             /** 	--ADDING HARD STUFF-- */
             try {
-				this.clientService.send(new Data_message(this.clientService.getIdClient(), new Date(), field.getText() ));
+				this.clientService.send(
+						new Sign(fieldUser.getText()),
+						new Data_message(this.clientService.getIdClient(), 
+						new Date(), 
+						field.getText() 
+				));
+				
 				ClientGUI.posted = false;
                 ClientGUI.field.setText("");
 			} catch (RemoteException e1) {
@@ -222,30 +234,37 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
         welcome.setText("Welcome " + name);
         return name;
     }
+    
+    public static String getPassword(){
+        String pass = JOptionPane.showInputDialog("Enter Your pwd");
+        welcome.setText("Pas " + pass);
+        return pass;
+    }
 
     public static void welcomeUser(String name){
         System.out.println("Welcome " + name);
         System.out.println("Please Enter A Message");
     }
 
-    public static void main(String[] args) throws MalformedURLException,RemoteException, NotBoundException {
+    public static void main(String[] args) throws MalformedURLException,RemoteException, NotBoundException, SQLException, JbeeException {
         
     	/** declaring stuff  */
-        
         String chatServerURL = "rmi://localhost/RMIChatServer";
-		ObservableServerI chatServer = (ObservableServerI) Naming.lookup(chatServerURL);
+        InterfaceServerSession chatServer = (InterfaceServerSession) Naming.lookup(chatServerURL);
 		
         
 		/** threading stuff */
 
         String name = ClientGUI.getUserName(); // Input User
-        Client clientService = new Client(chatServer, name); // Crafting clientService
+        String password = ClientGUI.getPassword();
         
-        clientService.initializeThread();
-        clientService.threadAccess().start();
+        Sign details = new Sign(name, password);
         
-        
-        new ClientGUI(clientService); // Instantiate GUI with clientService
+		User userService = new User(chatServer, details);
+		userService.initializeThread();
+		userService.threadAccess().start();
+	
+        new ClientGUI(userService); // Instantiate GUI with clientService
         
         ClientGUI.welcomeUser(name); // Hello
     }

@@ -1,4 +1,4 @@
-package Core.Session;
+package Core;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

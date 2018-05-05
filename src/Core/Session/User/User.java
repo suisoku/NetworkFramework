@@ -2,10 +2,10 @@ package Core.Session.User;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+
+import Core.Sign;
 import Core.Client.Client;
-import Core.Session.Sign;
 import Core.Session.Server.InterfaceServerSession;
-import Core.Session.User.InterfaceUser;
 import JBeeExceptions.JbeeException;
 import Services.DataUtilities.Data_message;
 import Services.Groups.InterfaceGroupe;
@@ -19,7 +19,7 @@ public class User extends Client implements InterfaceUser{
 	
 	protected Sign signInDetails;
 	protected boolean authentificated;
-	protected InterfaceServerSession Server = (InterfaceServerSession)this.Server;
+	private InterfaceServerSession Server;
 		
 
 	public User(InterfaceServerSession server, Sign details) throws RemoteException, SQLException  {
@@ -44,7 +44,7 @@ public class User extends Client implements InterfaceUser{
 	}
 	
 	@Override
-	public void send(User user, Data_message data) throws RemoteException {
+	public void send(Sign user, Data_message data) throws RemoteException {
 		this.Server.sendToPool(user, data);
 	}
 	
@@ -73,6 +73,10 @@ public class User extends Client implements InterfaceUser{
 	 *  */
 	public static void register(InterfaceServerSession server , Sign details) throws RemoteException, SQLException {
 		server.register(details);
+	}
+	
+	public String getPseudo() {
+		return this.signInDetails.getPseudo();
 	}
 	
 }

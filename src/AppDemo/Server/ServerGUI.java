@@ -10,6 +10,7 @@ import java.util.Calendar;
 import javax.swing.*;
 
 import Core.Serveur.Server;
+import Core.Session.Server.ServerSession;
 
 class ServerGUI extends JFrame implements ActionListener {
 
@@ -72,7 +73,7 @@ class ServerGUI extends JFrame implements ActionListener {
     }
     
     public static void main(String[] args) throws RemoteException, MalformedURLException {
-    	Server server = new Server();
+    	ServerSession server = new ServerSession();
     	server.initialize();
     	new ServerGUI();
     }

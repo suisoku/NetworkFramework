@@ -2,24 +2,27 @@ package Core.Session.Server;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import Core.InteractionBD;
+import Core.Sign;
 import Core.BD.connection;
+import Core.Client.ObserverClientI;
 import Core.Serveur.Server;
-import Core.Session.InteractionBD;
-import Core.Session.Sign;
-import Core.Session.User.User;
 import Core.Session.User.InterfaceUser;
+import Core.Session.User.User;
+import JBeeExceptions.JbeeException;
 import Services.DataUtilities.Data_message;
 
 public class ServerSession extends Server implements InterfaceServerSession{
-
-
 	
 	private static final long serialVersionUID = 1L;
-	private InteractionBD bd = new InteractionBD(connection.getConnection() , "ACCOUNTS");
-
+	private InteractionBD bd = new InteractionBD(connection.getConnection() , "USERS");
+	protected final ArrayList<InterfaceUser> chatClients;
+	
 	public ServerSession() throws RemoteException {
 		super();
+		chatClients = new ArrayList<InterfaceUser>();
 	}
 	
 	@Override
@@ -30,6 +33,15 @@ public class ServerSession extends Server implements InterfaceServerSession{
 			return true;
 		}
 		else return false;
+	}
+	
+	private InterfaceUser lookupUser(Sign details) {
+		for(InterfaceUser user : chatClients) {
+			if(user.getDetails().getPseudo().equals(details.getPseudo())){
+				return user;
+			}
+		}
+		return null;
 	}
 	
 	@Override
@@ -50,8 +62,14 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	}
 	
 	@Override
-	public synchronized void sendToPool(User user , Data_message data) throws RemoteException {
-		user.update(data);
+	public synchronized void sendToPool(Sign user , Data_message data) throws RemoteException {
+		InterfaceUser right_user = this.lookupUser(user);
+		
+		if(right_user != null) {
+			right_user.update(data);
+		}
+		else throw new JbeeException("Erreur rechercher utilisateur durant send");
+		
 	}	
 
 }

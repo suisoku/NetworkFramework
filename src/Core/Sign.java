@@ -1,4 +1,4 @@
-package Core.Session;
+package Core;
 
 public class Sign {
 	
@@ -8,6 +8,10 @@ public class Sign {
 	public Sign(String pseudo , String password) {
 		this.pseudo =  pseudo;
 		this.password =  password;
+	}
+	
+	public Sign(String pseudo) {
+		this.pseudo =  pseudo;
 	}
 
 	

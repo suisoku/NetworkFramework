@@ -9,15 +9,13 @@ import Core.Client.ObserverClientI;
 import Services.DataUtilities.Data_message;
 
 public class Server extends UnicastRemoteObject implements ObservableServerI {
-
 	/** default serial **/
 	private static final long serialVersionUID = 1L;
-	
 	protected final ArrayList<ObserverClientI> chatClients;
     protected static int client_count = 0;
 
     public Server() throws RemoteException {
-        chatClients = new ArrayList<>();
+        chatClients = new ArrayList<ObserverClientI>();
     }
 
     @Override
