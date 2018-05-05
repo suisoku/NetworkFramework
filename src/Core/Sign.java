@@ -1,6 +1,8 @@
 package Core;
 
-public class Sign {
+import java.io.Serializable;
+
+public class Sign implements Serializable {
 	
 	private String pseudo;
 	private String password;

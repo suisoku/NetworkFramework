@@ -3,7 +3,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 
-
 import Core.Serveur.ObservableServerI;
 import Services.DataUtilities.DataStorage;
 import Services.DataUtilities.Data_message;
@@ -15,7 +14,7 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	
 	/** Identification block and connection details*/
 	protected static final long serialVersionUID = -3125971307045486820L;
-	private final ObservableServerI Server;
+	private final ObservableServerI myServer;
 	protected final String idClient;
 	
 	
@@ -30,8 +29,8 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
      * @param Server
      * @throws RemoteException
      */
-    public Client(ObservableServerI Server, String id) throws RemoteException {
-        this.Server = Server;
+    public Client(ObservableServerI server, String id) throws RemoteException {
+        this.myServer = server;
         this.idClient = id;
         
         this.setStateSession(true);
@@ -49,12 +48,12 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
     	
     @Override
     public void send(Data_message message) throws RemoteException {
-    	Server.broadcastData(message);
+    	myServer.broadcastData(message);
     }
 
     @Override
     public void disconnectClient() throws RemoteException {
-            Server.disconnectClient();
+            myServer.disconnectClient();
             synchronized (this) {
                 this.setStateSession(false);
                 this.notifyAll();
@@ -89,10 +88,10 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	public void initializeThread() throws RemoteException {
 		
 		/* adding the client to the server */
-        Server.broadcastData(new Data_message(idClient, new Date(), new String("is connected")));
+        myServer.broadcastData(new Data_message(idClient, new Date(), new String("is connected")));
         
         /* calling the server method to broadcast the message */
-		Server.connectClient(this);
+		myServer.connectClient(this);
 		
 		main_run = new Thread(this);
 	}

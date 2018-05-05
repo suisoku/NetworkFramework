@@ -1,4 +1,5 @@
 package AppDemo.Client;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -15,9 +16,7 @@ import java.util.Date;
 import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import Core.Sign;
-import Core.Serveur.ObservableServerI;
 import Core.Session.Server.InterfaceServerSession;
 import Core.Session.User.User;
 import JBeeExceptions.JbeeException;

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import Core.InteractionBD;
 import Core.Sign;
 import Core.BD.connection;
-import Core.Client.ObserverClientI;
 import Core.Serveur.Server;
 import Core.Session.User.InterfaceUser;
 import Core.Session.User.User;
@@ -17,12 +16,15 @@ import Services.DataUtilities.Data_message;
 public class ServerSession extends Server implements InterfaceServerSession{
 	
 	private static final long serialVersionUID = 1L;
-	private InteractionBD bd = new InteractionBD(connection.getConnection() , "USERS");
-	protected final ArrayList<InterfaceUser> chatClients;
+	private InteractionBD bd ;
+	private final ArrayList<InterfaceUser> users;
 	
 	public ServerSession() throws RemoteException {
 		super();
-		chatClients = new ArrayList<InterfaceUser>();
+		
+		bd = new InteractionBD(connection.getConnection() , "USERS");
+		
+		users = new ArrayList<InterfaceUser>();
 	}
 	
 	@Override
@@ -35,8 +37,9 @@ public class ServerSession extends Server implements InterfaceServerSession{
 		else return false;
 	}
 	
-	private InterfaceUser lookupUser(Sign details) {
-		for(InterfaceUser user : chatClients) {
+	@Override
+	public InterfaceUser lookupUser(Sign details) throws RemoteException {
+		for(InterfaceUser user : users) {
 			if(user.getDetails().getPseudo().equals(details.getPseudo())){
 				return user;
 			}

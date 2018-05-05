@@ -6,12 +6,13 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 import Core.Client.ObserverClientI;
+import Core.Session.Server.ServerSession;
 import Services.DataUtilities.Data_message;
 
 public class Server extends UnicastRemoteObject implements ObservableServerI {
 	/** default serial **/
 	private static final long serialVersionUID = 1L;
-	protected final ArrayList<ObserverClientI> chatClients;
+	private final ArrayList<ObserverClientI> chatClients;
     protected static int client_count = 0;
 
     public Server() throws RemoteException {
@@ -46,7 +47,7 @@ public class Server extends UnicastRemoteObject implements ObservableServerI {
     public void initialize() throws RemoteException, MalformedURLException {
     	try {java.rmi.registry.LocateRegistry.createRegistry(1099);}
         catch (Exception e) {e.printStackTrace();}
-        Naming.rebind("RMIChatServer",new Server());
+        Naming.rebind("RMIChatServer",new ServerSession());
     }
 
 }

@@ -1,51 +1,46 @@
 package Core.Session.User;
-
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-
 import Core.Sign;
 import Core.Client.Client;
 import Core.Session.Server.InterfaceServerSession;
 import JBeeExceptions.JbeeException;
 import Services.DataUtilities.Data_message;
-import Services.Groups.InterfaceGroupe;
 
 public class User extends Client implements InterfaceUser{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	protected Sign signInDetails;
 	protected boolean authentificated;
-	private InterfaceServerSession Server;
+	private InterfaceServerSession myServer;
 		
 
 	public User(InterfaceServerSession server, Sign details) throws RemoteException, SQLException  {
 		super(server, details.getPseudo()); 
 		
-		this.Server = server;
+		this.myServer = (InterfaceServerSession) server;
 		this.signInDetails = details;
 		
-		if(!this.Server.authentication(this)) {
+		if(!this.myServer.authentication(this)) {
 			throw new JbeeException("Authentification failed");
 		}
 		else this.authentificated = true;
 	}
 	
-	public Sign getDetails() {
+	@Override
+	public Sign getDetails() throws RemoteException {
 		return this.signInDetails;
 	}
 
-	@Override
+	@Override 
 	public void send(Iterable<User> pool, Data_message data) throws RemoteException {
-		this.Server.sendToPool(pool, data);
+		this.myServer.sendToPool(pool, data);
 	}
 	
 	@Override
 	public void send(Sign user, Data_message data) throws RemoteException {
-		this.Server.sendToPool(user, data);
+		this.myServer.sendToPool(user, data);
 	}
 	
 	@Override
@@ -54,28 +49,24 @@ public class User extends Client implements InterfaceUser{
 		this.authentificated = false;
 	}
 	
-	public boolean isAuthentificated() {
+	@Override
+	public boolean isAuthentificated() throws RemoteException{
 		return authentificated;
 	}
 
-	@Override
-	public void joinPool(InterfaceGroupe pool) {
-		
-		/* save group */ 
-	}
+//	@Override
+//	public void joinPool(InterfaceGroupe pool)  throws RemoteException{} 
 
-	@Override
-	public void leavePool(InterfaceGroupe pool) {
-	}
+//	@Override
+//	public void leavePool(InterfaceGroupe pool) throws RemoteException {}
 	
-	/** static method to register in server 
-	 * 
-	 *  */
-	public static void register(InterfaceServerSession server , Sign details) throws RemoteException, SQLException {
+
+	/*public static void register(InterfaceServerSession server , Sign details) throws RemoteException, SQLException {
 		server.register(details);
-	}
+	}*/
 	
-	public String getPseudo() {
+	@Override
+	public String getPseudo() throws RemoteException {
 		return this.signInDetails.getPseudo();
 	}
 	

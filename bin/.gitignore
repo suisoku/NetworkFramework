@@ -1,4 +1,7 @@
-/Core/
-/Services/
 /AppDemo/
-/testUser/
+/BasicInterfaces/
+/Core/
+/JBeeExceptions/
+/Services/
+/Test/
+/java.policy
