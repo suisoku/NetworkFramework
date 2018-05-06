@@ -19,7 +19,7 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	
 	
 	/** Data storage and other facilities  */
-	protected DataStorage messageStorage;
+	private DataStorage messageStorage;
 	protected boolean stateSession;
 	
 	protected Thread main_run ;
@@ -53,7 +53,7 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 
     @Override
     public void disconnectClient() throws RemoteException {
-            myServer.disconnectClient();
+            myServer.disconnectClient(this);
             synchronized (this) {
                 this.setStateSession(false);
                 this.notifyAll();
@@ -61,20 +61,24 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
            
     }
     
+    
     public void subToMessStorage(ArrayListener listener) {
     	this.messageStorage.addListener(listener);
     }
     
-    public String getIdClient() {
+    @Override
+    public String getIdClient()  throws RemoteException{
     	return this.idClient;
     }
     
+
     /** private methods: Handling the different status of the Client */
-	private boolean isStateSession() {
+	public boolean isStateSession() {
 		return stateSession;
 	}
 
-	private void setStateSession(boolean stateSession) {
+
+	protected void setStateSession(boolean stateSession)  {
 		this.stateSession = stateSession;
 	}
 	
@@ -87,13 +91,12 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	@Override
 	public void initializeThread() throws RemoteException {
 		
-		/* adding the client to the server */
-        myServer.broadcastData(new Data_message(idClient, new Date(), new String("is connected")));
+		
+		System.out.println("Initializing the thread...");
+		main_run = new Thread(this);
         
         /* calling the server method to broadcast the message */
-		myServer.connectClient(this);
-		
-		main_run = new Thread(this);
+		//System.out.println(this.getClass().getName());
 	}
 	
 	
@@ -113,4 +116,11 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
 	        }
          System.out.println("Exiting run method");
     }
+
+	@Override
+	public void connectToServer() throws RemoteException {
+		myServer.connectClient(this);
+	}
+	
+
 }

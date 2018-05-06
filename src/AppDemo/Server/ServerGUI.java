@@ -23,13 +23,16 @@ class ServerGUI extends JFrame implements ActionListener {
     private final JLabel time = new JLabel();
     private final JLabel clientList = new JLabel("Clients Connected :" + "0");
     private final JButton clients_total = new JButton("Refresh Client List");
-
-    public ServerGUI() {
-        super("Chat Server");
+    private  int nb;
+    ServerSession server;
+    
+    public ServerGUI(ServerSession server) throws RemoteException {
+        super("Serveur de communication");
         setUpWindow();
         addEventListeners();
-        int myLocalVar = Server.getClients();
-        clientList.setText("" + myLocalVar);
+        
+        this.server = server;
+        clientList.setText("" + server.getNbClients());
     }
 
     private void addEventListeners() {
@@ -67,14 +70,21 @@ class ServerGUI extends JFrame implements ActionListener {
             System.exit(0);
         }
         if (source == clients_total) {
-            int myLocalVar = Server.getClients();
-            clientList.setText("Total Connected Today: " + myLocalVar);
+        	try {
+				nb = server.getNbClients();
+				clientList.setText("Total Connected TodayY: " + nb);
+			} catch (RemoteException e1) {
+				
+				e1.printStackTrace();
+			}
+			
+            
         }
     }
     
     public static void main(String[] args) throws RemoteException, MalformedURLException {
     	ServerSession server = new ServerSession();
     	server.initialize();
-    	new ServerGUI();
+    	new ServerGUI(server);
     }
 }

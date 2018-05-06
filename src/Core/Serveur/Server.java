@@ -13,8 +13,7 @@ public class Server extends UnicastRemoteObject implements ObservableServerI {
 	/** default serial **/
 	private static final long serialVersionUID = 1L;
 	private final ArrayList<ObserverClientI> chatClients;
-    protected static int client_count = 0;
-
+	
     public Server() throws RemoteException {
         chatClients = new ArrayList<ObserverClientI>();
     }
@@ -23,7 +22,6 @@ public class Server extends UnicastRemoteObject implements ObservableServerI {
     /** synchronized allow safe resources accessing **/
     public synchronized void connectClient(ObserverClientI chatClient)throws RemoteException {
         this.chatClients.add(chatClient);
-        client_count++;
     }
 
     @Override
@@ -34,20 +32,26 @@ public class Server extends UnicastRemoteObject implements ObservableServerI {
         }
     }
 
-    public static int getClients() {
-        return client_count;
-    }
+    @Override
+    public synchronized int getNbClients()  throws RemoteException {
+        return  this.chatClients.size();
+	}
+    
+
     
     @Override
-    public void disconnectClient() throws RemoteException {
-        client_count--;
+    public synchronized void disconnectClient(ObserverClientI c) throws RemoteException {
+        for(int i = 0 ; i < this.chatClients.size() ; i++){
+        	if(this.chatClients.get(i).getIdClient().equals(c.getIdClient()) )this.chatClients.remove(i);	
+        }
     }
     
     @Override
     public void initialize() throws RemoteException, MalformedURLException {
     	try {java.rmi.registry.LocateRegistry.createRegistry(1099);}
         catch (Exception e) {e.printStackTrace();}
-        Naming.rebind("RMIChatServer",new ServerSession());
+        Naming.rebind("RMIChatServer", this);
     }
+
 
 }

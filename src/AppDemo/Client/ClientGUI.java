@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import Core.Sign;
+import Core.UserInfo;
 import Core.Session.Server.InterfaceServerSession;
 import Core.Session.User.User;
 import JBeeExceptions.JbeeException;
@@ -154,7 +154,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
             /** 	--ADDING HARD STUFF-- */
             try {
 				this.clientService.send(
-						new Sign(fieldUser.getText()),
+						new UserInfo(fieldUser.getText()),
 						new Data_message(this.clientService.getIdClient(), 
 						new Date(), 
 						field.getText() 
@@ -175,8 +175,8 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
             
             /** 	--ADDING HARD STUFF-- */
             try {
-            	this.clientService.send(new Data_message(this.clientService.getIdClient(), new Date(), "has disconnected" ));
-				this.clientService.disconnectClient();
+            	//this.clientService.send(new Data_message(this.clientService.getIdClient(), new Date(), "has disconnected" ));
+				this.clientService.signOut();
 				ClientGUI.disconnected = false;
 			} catch (RemoteException e1) {
 				// TODO Auto-generated catch block
@@ -236,9 +236,9 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
     
     public static String getPassword(){
         String pass = JOptionPane.showInputDialog("Enter Your pwd");
-        welcome.setText("Pas " + pass);
         return pass;
     }
+
 
     public static void welcomeUser(String name){
         System.out.println("Welcome " + name);
@@ -247,24 +247,45 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 
     public static void main(String[] args) throws MalformedURLException,RemoteException, NotBoundException, SQLException, JbeeException {
         
-    	/** declaring stuff  */
+    	/** looking remote interface of server  */
         String chatServerURL = "rmi://localhost/RMIChatServer";
         InterfaceServerSession chatServer = (InterfaceServerSession) Naming.lookup(chatServerURL);
-		
-        
-		/** threading stuff */
 
-        String name = ClientGUI.getUserName(); // Input User
+        User userService = new User(chatServer, new UserInfo(ClientGUI.getUserName(), ClientGUI.getPassword() ) );
+        /** decoupled way
+        String name = ClientGUI.getUserName(); 
         String password = ClientGUI.getPassword();
-        
         Sign details = new Sign(name, password);
-        
-		User userService = new User(chatServer, details);
-		userService.initializeThread();
-		userService.threadAccess().start();
-	
-        new ClientGUI(userService); // Instantiate GUI with clientService
-        
-        ClientGUI.welcomeUser(name); // Hello
+               
+         **/       
+        /** you have the possibility to register the user before connect him ->   userService.register();*/
+		
+		
+		/** authentication -> connection -> dataReloading took in charge**/
+		userService.connectToServer();
+		
+		if(userService.isAuthentificated()) {
+			System.out.println("logged");
+			
+			/** initializing and starting the thread **/
+		
+			userService.initializeThread();
+			userService.threadAccess().start();
+			
+			/** launching GUI **/
+			new ClientGUI(userService); 
+			ClientGUI.welcomeUser(userService.getPseudo());
+			
+			
+			/** reloading the user previous messages **/
+			for(Data_message mess : userService.getMessageStack()) {
+				if(mess.getData() instanceof String) {
+					ClientGUI.area.append("\n\n" + mess.getDate() + " - " + mess.getId_sender() + "  : " + mess.getData() );
+				}
+			}
+			
+		}
+		else System.out.println("log in : failed");
+		
     }
 }

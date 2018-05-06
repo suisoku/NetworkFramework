@@ -2,14 +2,15 @@ package Core.Session.Server;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.util.HashMap;
 
-import Core.InteractionBD;
-import Core.Sign;
+import Core.UserInfo;
+import Core.BD.InteractionBD;
 import Core.BD.connection;
+import Core.Client.ObserverClientI;
 import Core.Serveur.Server;
 import Core.Session.User.InterfaceUser;
-import Core.Session.User.User;
 import JBeeExceptions.JbeeException;
 import Services.DataUtilities.Data_message;
 
@@ -17,39 +18,40 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	
 	private static final long serialVersionUID = 1L;
 	private InteractionBD bd ;
-	private final ArrayList<InterfaceUser> users;
+	
+	private HashMap<String, InterfaceUser> users;
 	
 	public ServerSession() throws RemoteException {
 		super();
 		
-		bd = new InteractionBD(connection.getConnection() , "USERS");
+		bd = new InteractionBD(connection.getConnection() , "USERS", "DATAMESSAGE");
 		
-		users = new ArrayList<InterfaceUser>();
+		users = new HashMap<String, InterfaceUser>();
 	}
 	
 	@Override
-	public boolean authentication(InterfaceUser user) throws RemoteException, SQLException {
-		
-		if(bd.look(user.getDetails())) {
-			this.connectClient(user);
-			return true;
-		}
-		else return false;
+	public boolean authentication(InterfaceUser user) throws RemoteException {
+			try {
+				return bd.identify(user.getDetails());
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}	
 	}
 	
-	@Override
-	public InterfaceUser lookupUser(Sign details) throws RemoteException {
-		for(InterfaceUser user : users) {
-			if(user.getDetails().getPseudo().equals(details.getPseudo())){
-				return user;
+	@Override	
+	public InterfaceUser lookupUser(UserInfo details) throws RemoteException {
+		for(String key: users.keySet()) {
+			if(key.equals(details.getPseudo())){
+				return users.get(key);
 			}
 		}
 		return null;
 	}
 	
 	@Override
-	public boolean register(Sign details) throws RemoteException, SQLException {
-		if(!bd.look(details)) {
+	public boolean register(UserInfo details) throws RemoteException, SQLException {
+		if(!bd.identify(details)) {
 			bd.add(details);
 			return true;
 		}
@@ -57,22 +59,64 @@ public class ServerSession extends Server implements InterfaceServerSession{
 		
 	}
 	
+
+	
 	@Override
-	public synchronized void sendToPool(Iterable<User> pool , Data_message data) throws RemoteException {
-		for(User user : pool) {
-			user.update(data);
+	public synchronized void sendToPool(UserInfo user_details , Data_message data) throws RemoteException {
+		
+		
+		
+		try {
+			if(bd.lookUser(user_details)) {
+				
+				InterfaceUser right_user = this.lookupUser(user_details);
+				if(right_user != null) {	right_user.update(data);	}
+				
+				bd.storeIntoBD(user_details.getPseudo(), data);
+			}
+			else  throw new JbeeException("user not found in DB");
+		}
+		catch (SQLException | ParseException e) {e.printStackTrace();}
+	}	
+	
+	
+	/** not tested yet **/
+	@Override
+	public synchronized void sendToPool(Iterable<UserInfo> pool , Data_message data) throws RemoteException {
+		for(UserInfo u : pool) {
+			sendToPool(u , data);
 		}
 	}
 	
+ 
+    /** synchronized allow safe resources accessing  **/
 	@Override
-	public synchronized void sendToPool(Sign user , Data_message data) throws RemoteException {
-		InterfaceUser right_user = this.lookupUser(user);
+    public synchronized void connectClient(ObserverClientI u) throws RemoteException {
 		
-		if(right_user != null) {
-			right_user.update(data);
+		InterfaceUser user =  (InterfaceUser)u;
+		
+	
+		if(authentication(user)) {
+			
+			this.users.put(user.getPseudo(), user);
+		
+			try {
+				user.reloadData(bd.loadDataMessages(user.getDetails()));
+			} catch (SQLException | ParseException e) { 	e.printStackTrace();}
+		
+			user.setAuthentificated(true);
 		}
-		else throw new JbeeException("Erreur rechercher utilisateur durant send");
-		
-	}	
-
+		else user.setAuthentificated(false);
+	}
+	
+	@Override
+	public synchronized void disconnectClient(ObserverClientI u) throws RemoteException {
+		 this.users.remove(u.getIdClient());
+	}
+	
+	@Override 
+	public synchronized int getNbClients() throws RemoteException {
+		return this.users.size();
+	}
+	
 }
