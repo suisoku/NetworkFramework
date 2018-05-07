@@ -2,17 +2,17 @@ package Core;
 
 import java.io.Serializable;
 
-public class Sign implements Serializable {
+public class UserInfo implements Serializable {
 	
 	private String pseudo;
 	private String password;
 	
-	public Sign(String pseudo , String password) {
+	public UserInfo(String pseudo , String password) {
 		this.pseudo =  pseudo;
 		this.password =  password;
 	}
 	
-	public Sign(String pseudo) {
+	public UserInfo(String pseudo) {
 		this.pseudo =  pseudo;
 	}
 

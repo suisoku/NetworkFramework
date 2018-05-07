@@ -20,6 +20,11 @@ public class DataStorage extends ArrayList<Data_message>{
 	private final EventListenerList listeners = new EventListenerList();
 	
 	
+	public DataStorage(String id_client, ArrayList<Data_message> payload) {
+		super(payload);
+		this.id_client = id_client;
+	}
+	
 	public DataStorage(String id_client) {
 		super();
 		this.id_client = id_client;

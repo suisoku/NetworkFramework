@@ -9,6 +9,7 @@ import Services.DataUtilities.Data_message;
 public interface ObservableServerI extends Remote {
     public void connectClient(ObserverClientI client) throws RemoteException;
     public void broadcastData(Data_message data) throws RemoteException;
-    public void disconnectClient() throws RemoteException;
     public void initialize() throws RemoteException, MalformedURLException;
+	public void disconnectClient(ObserverClientI oc) throws RemoteException;
+	public int getNbClients() throws RemoteException;
 }
