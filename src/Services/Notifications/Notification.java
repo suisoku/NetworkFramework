@@ -1,5 +1,5 @@
 package Services.Notifications;
 
-public class a {
+public class Notification {
 
 }

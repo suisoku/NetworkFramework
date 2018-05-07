@@ -1,6 +1,11 @@
 package Services.Groups;
-
+// 
 public abstract class AbstractGroupe implements InterfaceGroupe {
-	protected String NameGroupe;
-    
+	protected final String NameGroupe;
+	//protected final ArrayList<InterfaceUser> Members;
+	
+	public AbstractGroupe(String nameGroupe) {
+		NameGroupe = nameGroupe;
+	}
+
 }

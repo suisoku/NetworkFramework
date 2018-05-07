@@ -4,7 +4,8 @@ public class PostImpl implements PostInterface {
 
 	@Override
 	public void creer(Post post) {
-		// TODO Auto-generated method stub	
+		
+		
 	}
 
 	@Override
@@ -18,3 +19,7 @@ public class PostImpl implements PostInterface {
 		
 	}
 }
+
+
+
+// blob: type dans pour fichier , oracle.
