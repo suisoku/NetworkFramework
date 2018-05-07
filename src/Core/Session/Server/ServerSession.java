@@ -94,8 +94,6 @@ public class ServerSession extends Server implements InterfaceServerSession{
     public synchronized void connectClient(ObserverClientI u) throws RemoteException {
 		
 		InterfaceUser user =  (InterfaceUser)u;
-		
-	
 		if(authentication(user)) {
 			
 			this.users.put(user.getPseudo(), user);

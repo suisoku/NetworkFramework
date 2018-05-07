@@ -14,7 +14,4 @@ public class Predicat {
 		this(name,value); 
 		this.map = map;
 	}
-	
-	
-
 }

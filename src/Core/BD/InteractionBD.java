@@ -31,6 +31,9 @@ public class InteractionBD {
 	private String user_table;
 	private String data_table;
 	
+	
+	
+	
 	public InteractionBD(Connection conn , String user_table , String data_table ){
 		this.conn = conn;
 		this.user_table = user_table;
@@ -47,8 +50,7 @@ public class InteractionBD {
 				" where PSEUDO = '" + details.getPseudo() +
 				"' and PASSWORD = '" + details.getPassword() +"'"
 				);
-		
-		
+				
 		 while (rs.next())count++;
 		 rs.close();
 		 stmt.close();

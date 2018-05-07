@@ -260,7 +260,7 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
          **/       
         /** you have the possibility to register the user before connect him ->   userService.register();*/
 		
-		
+		//userService.register();
 		/** authentication -> connection -> dataReloading took in charge**/
 		userService.connectToServer();
 		
