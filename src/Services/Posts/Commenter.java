@@ -9,7 +9,7 @@ public class Commenter implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private PostInterface postInterface;
+	private InterfacePost postInterface;
 	private Post post;
 
 	private CommentInterface commentInterface;
