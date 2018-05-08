@@ -6,8 +6,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.UUID;
 
-import Core.UserInfo;
+import Core.Session.UserInfo;
 import Services.DataUtilities.FileData;
 
 // on doit utiliser de la sérialisation pour stokcer nos posts vu qu'on utilise le RMI
@@ -16,7 +17,7 @@ public class Publication extends AbstractPost implements Serializable, Interface
 	private static final long serialVersionUID = 1L;
 	private String titlePost;
 	private HashMap<Integer, FileData> imageList = new HashMap<Integer, FileData>() ;
-	private HashMap<Integer, Comment> commentList = new HashMap<Integer, Comment>() ;
+	private HashMap<UUID, Comment> commentList = new HashMap<UUID, Comment>() ;
 	
 	private AbstractInteractive interactor ;
 	// pour traiter chaque type de contenu apart on ajoute un type pour l'identifier
@@ -46,14 +47,14 @@ public class Publication extends AbstractPost implements Serializable, Interface
 	}
 	
 	public void addComment(Comment c) {
-		 this.commentList.put(c.getIdComment(), c);
+		 this.commentList.put(c.getIdPost(), c);
 	}
 
-	public void editComment(Integer id , String contenu) {
+	public void editComment(UUID id , String contenu) {
 		 this.commentList.get(id).editTextField(contenu);
 	}
 	
-	public void deleteComment(Integer id) {
+	public void deleteComment(UUID id) {
 		 this.commentList.remove(id);
 	}
 	

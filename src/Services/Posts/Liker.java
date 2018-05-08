@@ -2,7 +2,7 @@ package Services.Posts;
 
 import java.util.ArrayList;
 
-import Core.UserInfo;
+import Core.Session.UserInfo;
 
 public class Liker extends AbstractInteractive {
 

@@ -1,36 +1,18 @@
 package Services.Posts;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Date;
 
-import Core.UserInfo;
-import Core.BD.Connexionsgbd;
-import Core.BD.connection;
-import Services.Profile.InterfaceTuple;
-import Services.Profile.Predicat;
+import java.util.Date;
+import java.util.UUID;
+
+import Core.Session.UserInfo;
 
 public abstract class AbstractPost  {
 
 	protected UserInfo userPoster;
 	protected Date datePost;
-	protected int idPost;
+	protected UUID idPost  = UUID.randomUUID();
 	protected String textField;
 	
-	public String datePostToString(java.util.Date date2) {
-		java.util.Date date1 = new java.util.Date();
-		long time = ((date1.getTime() - date2.getTime()) / 60000);
-		if (time < 60) {
-			return time + " min";
-		} else if (time >= 60 && time < 1440) {
-			return (time / 60) + " h";
-		} else {
-			return date2.toString();
-		}
-	}
 
 
 	public String getTextField() {
@@ -45,7 +27,7 @@ public abstract class AbstractPost  {
 	public Date getDatePost() {
 		return this.datePost;
 	}
-	public Integer getIdPost() {
+	public UUID getIdPost() {
 		return this.idPost;
 	}
 
