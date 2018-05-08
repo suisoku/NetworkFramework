@@ -1,59 +1,37 @@
 package Services.Posts;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Comment implements java.io.Serializable {
+import Core.UserInfo;
+
+public class Comment extends AbstractPost implements Serializable {
+
+
+	
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int idComment ;
-	// private Profile profile;
-	private Post post;
-	private String contenu;
-	private Date dateComment;
-	
-	
-	 public Comment(Post post, String contenu, Date dateComment) {
-	       this.post = post;
-	       this.contenu = contenu;
-	       this.dateComment = dateComment;
-	    }
+
+	public Comment(UserInfo user , String contenu) {
+		   this.userPoster = user;
+	       this.textField = contenu;
+	       this.datePost = new Date();
+    }
 	 
-	public Comment() {
-		// TODO Auto-generated constructor stub
-	}
 
 	public int getIdComment() {
-		return idComment;
-	}
-
-	public void setIdComment(int idComment) {
-		this.idComment = idComment;
-	}
-
-	public Post getPost() {
-		return post;
-	}
-
-	public void setPost(Post post) {
-		this.post = post;
-	}
-
-	public String getContenu() {
-		return contenu;
+		return this.idPost;
 	}
 
 	public void setContenu(String contenu) {
-		this.contenu = contenu;
+		this.textField = contenu;
 	}
 
 	public Date getDateComment() {
-		return dateComment;
+		return this.datePost;
 	}
 
-	public void setDateComment(Date dateComment) {
-		this.dateComment = dateComment;
-	}
 }

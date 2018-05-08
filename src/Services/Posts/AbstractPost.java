@@ -5,30 +5,21 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
+import Core.UserInfo;
 import Core.BD.Connexionsgbd;
 import Core.BD.connection;
 import Services.Profile.InterfaceTuple;
 import Services.Profile.Predicat;
 
-public abstract class AbstractPost implements InterfacePost {
+public abstract class AbstractPost  {
+
+	protected UserInfo userPoster;
+	protected Date datePost;
+	protected int idPost;
+	protected String textField;
 	
-	private static final long serialVersionUID = 1L;
-	private InterfacePost interfacePost;
-	private Post post;
-
-	public void init() {
-		post = new Post();
-	}
-
-	public Post getPost() {
-		return post;
-	}
-
-	public void setPost(Post post) {
-		this.post = post;
-	}
-
 	public String datePostToString(java.util.Date date2) {
 		java.util.Date date1 = new java.util.Date();
 		long time = ((date1.getTime() - date2.getTime()) / 60000);
@@ -40,17 +31,25 @@ public abstract class AbstractPost implements InterfacePost {
 			return date2.toString();
 		}
 	}
-	
-    public void Poster() {
-        
-     // ici je dois trouver un moyen comment intéger l'identité du User qui va poster
-        
-        post.setdatePost(new java.util.Date());
-        interfacePost.creer(post);
-        System.out.println(post);
 
-    }
 
+	public String getTextField() {
+		return this.textField;
+	}
+	public void editTextField(String contenu) {
+		this.textField = contenu;
+	}
+	public UserInfo getUser() {
+		return this.userPoster;
+	}
+	public Date getDatePost() {
+		return this.datePost;
+	}
+	public Integer getIdPost() {
+		return this.idPost;
+	}
+
+/**
 	@Override
 	public void creer(String table_name, InterfaceTuple tuple) throws SQLException {
 
@@ -83,6 +82,5 @@ public abstract class AbstractPost implements InterfacePost {
 		connection.getConnection().commit();
 		stmt.close();
 	}
+	*/
 }
-
-// blob: type dans pour fichier , oracle.
