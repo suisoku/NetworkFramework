@@ -8,7 +8,7 @@ import Services.Posts.Publication;
 public class Houssem_test_publications {
 	 public static void main(String[] args) {
 		 
-		 UserInfo user1 = new UserInfo("Houssaim");
+		 UserInfo user1 = new UserInfo("Houssem");
 		 Publication post1 =  new Publication(user1 ,"Le caffe" , "le caffe c bon pour la sante");
 		 
 		 Comment com = new Comment(user1, "jjjjjjaaaaajjja");
