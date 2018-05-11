@@ -1,20 +1,19 @@
 package Core.Client;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Date;
 
-import Core.Serveur.ObservableServerI;
+import Core.Serveur._Server;
 import Services.DataUtilities.DataStorage;
-import Services.DataUtilities.Data_message;
+import Services.DataUtilities.DataMessage;
 import Services.DataUtilities.events.ArrayListener;
 
 
-public class Client extends UnicastRemoteObject implements Runnable, ObserverClientI {
+public class Client extends UnicastRemoteObject implements Runnable, _Client {
 	
 	
 	/** Identification block and connection details*/
 	protected static final long serialVersionUID = -3125971307045486820L;
-	private final ObservableServerI myServer;
+	private final _Server myServer;
 	protected final String idClient;
 	
 	
@@ -29,7 +28,7 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
      * @param Server
      * @throws RemoteException
      */
-    public Client(ObservableServerI server, String id) throws RemoteException {
+    public Client(_Server server, String id) throws RemoteException {
         this.myServer = server;
         this.idClient = id;
         
@@ -42,12 +41,12 @@ public class Client extends UnicastRemoteObject implements Runnable, ObserverCli
     
     /** Observer Pattern : allow update if server notify() */
     @Override
-    public void update(Data_message message) throws RemoteException {
+    public void update(DataMessage message) throws RemoteException {
         messageStorage.add(message);
     }
     	
     @Override
-    public void send(Data_message message) throws RemoteException {
+    public void send(DataMessage message) throws RemoteException {
     	myServer.broadcastData(message);
     }
 

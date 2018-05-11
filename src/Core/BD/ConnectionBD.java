@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
-public class connection {
+public class ConnectionBD {
 
     private static final String configurationFile = "BD.properties";
     private static Connection conn;

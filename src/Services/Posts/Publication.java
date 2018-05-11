@@ -1,14 +1,12 @@
 package Services.Posts;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.UUID;
 
-import Core.Session.UserInfo;
+import Core.Session.AccountInfo;
 import Services.DataUtilities.FileData;
 
 // on doit utiliser de la sérialisation pour stokcer nos posts vu qu'on utilise le RMI
@@ -24,19 +22,26 @@ public class Publication extends AbstractPost implements Serializable, Interface
 	// 1: pour les textes , 2: pour les images, 3: pour les videos.
 	/** private int typePost; interface ? + image */
 
-	public Publication(UserInfo user , String textField) {
+	/**public Publication(AccountInfo user , String textField) {
 		this.userPoster = user;
 		this.textField = textField;
 		this.datePost = new Date();
-	}
+	}**/
 
-	public Publication(UserInfo user, String title, String textField) {
+	
+	public Publication(AccountInfo user, String title, String textField) {
 		this.userPoster = user;
 		this.titlePost = title;
 		this.textField = textField;
 		this.datePost = new Date();
 	}
+	
+	public void loadComments(HashMap<UUID, Comment> commentList) {
+		this.commentList = commentList;
+	}
 
+
+	
 	public String getTitlePost() {
 		return titlePost;
 	}

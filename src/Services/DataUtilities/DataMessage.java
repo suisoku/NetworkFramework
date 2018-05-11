@@ -1,10 +1,9 @@
 package Services.DataUtilities;
 
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class Data_message implements Serializable {
+public class DataMessage implements _DataMessage {
 	
 	/**
 	 * 
@@ -15,7 +14,7 @@ public class Data_message implements Serializable {
 	private Object data;
 	
 	
-	public Data_message(String id , Date send_date, Object data) {
+	public DataMessage(String id , Date send_date, Object data) {
 		this.id_sender = id ;
 		this.send_date = send_date ;
 		this.data = data ;

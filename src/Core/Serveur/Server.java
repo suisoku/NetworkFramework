@@ -5,27 +5,27 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-import Core.Client.ObserverClientI;
+import Core.Client._Client;
 import Core.Session.Server.ServerSession;
-import Services.DataUtilities.Data_message;
+import Services.DataUtilities.DataMessage;
 
-public class Server extends UnicastRemoteObject implements ObservableServerI {
+public class Server extends UnicastRemoteObject implements _Server {
 	/** default serial **/
 	private static final long serialVersionUID = 1L;
-	private final ArrayList<ObserverClientI> chatClients;
+	private final ArrayList<_Client> chatClients;
 	
     public Server() throws RemoteException {
-        chatClients = new ArrayList<ObserverClientI>();
+        chatClients = new ArrayList<_Client>();
     }
 
     @Override
     /** synchronized allow safe resources accessing **/
-    public synchronized void connectClient(ObserverClientI chatClient)throws RemoteException {
+    public synchronized void connectClient(_Client chatClient)throws RemoteException {
         this.chatClients.add(chatClient);
     }
 
     @Override
-    public synchronized void broadcastData(Data_message message)throws RemoteException {
+    public synchronized void broadcastData(DataMessage message)throws RemoteException {
         int i = 0;
         while (i < chatClients.size()) {
             chatClients.get(i++).update(message);
@@ -40,7 +40,7 @@ public class Server extends UnicastRemoteObject implements ObservableServerI {
 
     
     @Override
-    public synchronized void disconnectClient(ObserverClientI c) throws RemoteException {
+    public synchronized void disconnectClient(_Client c) throws RemoteException {
         for(int i = 0 ; i < this.chatClients.size() ; i++){
         	if(this.chatClients.get(i).getIdClient().equals(c.getIdClient()) )this.chatClients.remove(i);	
         }

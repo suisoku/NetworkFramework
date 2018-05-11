@@ -1,16 +1,16 @@
 package Services.DataUtilities.events;
 
-import Services.DataUtilities.Data_message;
+import Services.DataUtilities.DataMessage;
 
 public class EventMessage {
 	
-    private Data_message last_element;
+    private DataMessage last_element;
  
-    public EventMessage(Data_message last_message) {
+    public EventMessage(DataMessage last_message) {
         this.last_element = last_message;
     }
  
-    public Data_message getLastMessage() {
+    public DataMessage getLastMessage() {
         return last_element;
     }
  

@@ -4,11 +4,11 @@ package Services.Posts;
 import java.util.Date;
 import java.util.UUID;
 
-import Core.Session.UserInfo;
+import Core.Session.AccountInfo;
 
 public abstract class AbstractPost  {
 
-	protected UserInfo userPoster;
+	protected AccountInfo userPoster;
 	protected Date datePost;
 	protected UUID idPost  = UUID.randomUUID();
 	protected String textField;
@@ -21,7 +21,7 @@ public abstract class AbstractPost  {
 	public void editTextField(String contenu) {
 		this.textField = contenu;
 	}
-	public UserInfo getUser() {
+	public AccountInfo getUser() {
 		return this.userPoster;
 	}
 	public Date getDatePost() {
@@ -31,6 +31,9 @@ public abstract class AbstractPost  {
 		return this.idPost;
 	}
 
+	public void setDate(Date d) {
+		this.datePost = d;
+	}
 /**
 	@Override
 	public void creer(String table_name, InterfaceTuple tuple) throws SQLException {

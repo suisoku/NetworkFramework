@@ -16,276 +16,274 @@ import java.util.Date;
 import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import Core.UserInfo;
-import Core.Session.Server.InterfaceServerSession;
+
+import Core.BD.Predicat;
+import Core.Session.AccountInfo;
+import Core.Session.Server._ServerSession;
 import Core.Session.User.User;
 import JBeeExceptions.JbeeException;
-import Services.DataUtilities.Data_message;
+import Services.DataUtilities.DataMessage;
 import Services.DataUtilities.FileData;
 import Services.DataUtilities.events.ArrayListener;
 import Services.DataUtilities.events.EventMessage;
 
 public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 
-
-	/** ------------------- Identity related declarations -----------------*/
+	/** ------------------- Identity related declarations ----------------- */
 	private final User clientService;
 	private static final long serialVersionUID = 1L;
-	
-	
-	/** ---------------------- State related declarations -------------------*/
-    static Boolean posted = false;
-    static Boolean disconnected = false;
-    
-    /** -----------------------   GUI related declaration-----------------------*/
+
+	/** ---------------------- State related declarations ------------------- */
+	static Boolean posted = false;
+	static Boolean disconnected = false;
+
+	/** ----------------------- GUI related declaration----------------------- */
 	private static final JLabel message = new JLabel("Joined at: ");
-    private static final JLabel welcome = new JLabel();
-    static final JTextField field = new JTextField(20);
-    private static final JButton post = new JButton("Post Message");
-    private static final JButton disconnect = new JButton("Disconnect");
-    static final JTextArea area = new JTextArea(5, 5);
-    
-    /** ----HARD STUFF TEST---- */
-    private static final JButton upload = new JButton("Upload File");
-    static final JTextField fieldUser = new JTextField(20);
+	private static final JLabel welcome = new JLabel();
+	static final JTextField field = new JTextField(20);
+	private static final JButton post = new JButton("Post Message");
+	private static final JButton disconnect = new JButton("Disconnect");
+	static final JTextArea area = new JTextArea(5, 5);
 
-    /** ---- END OF HARD STUFF TEST---- */
+	/** ----HARD STUFF TEST---- */
+	private static final JButton upload = new JButton("Upload File");
+	static final JTextField fieldUser = new JTextField(20);
 
-    
+	/** ---- END OF HARD STUFF TEST---- */
 
-    
-    
-    
-    public ClientGUI(User clientService) {
-    	
-        super("ClientGUI Chat");
-    	this.clientService = clientService;
-        setUpPanel(this);
-        setAddEventListeners();
-        clientService.subToMessStorage(this);
-    }
+	public ClientGUI(User clientService) {
 
-    
-    private void setUpPanel(ClientGUI clientGUI) {
-        JPanel panel_north = new JPanel();
-        JPanel panel_middle = new JPanel(new GridLayout(1, 2));
-        panel_north.add(welcome);
-        panel_north.add(message);
-        JPanel panel_south = new JPanel();
-        panel_south.add(field);
-        panel_south.add(fieldUser);
-        panel_south.add(post);
-        panel_south.add(upload);
+		super("ClientGUI Chat");
+		this.clientService = clientService;
+		setUpPanel(this);
+		setAddEventListeners();
+		clientService.subToMessStorage(this);
+	}
 
-        clientGUI.setResizable(false);
-        clientGUI.setVisible(false);
-        clientGUI.showTime();
+	private void setUpPanel(ClientGUI clientGUI) {
+		JPanel panel_north = new JPanel();
+		JPanel panel_middle = new JPanel(new GridLayout(1, 2));
+		panel_north.add(welcome);
+		panel_north.add(message);
+		JPanel panel_south = new JPanel();
+		panel_south.add(field);
+		panel_south.add(fieldUser);
+		panel_south.add(post);
+		panel_south.add(upload);
 
-        area.setEditable(false);
-        addScrollPanelToPanel(panel_middle);
+		clientGUI.setResizable(false);
+		clientGUI.setVisible(false);
+		clientGUI.showTime();
 
-        clientGUI.setUserTextColor();
-        setComponentColors(panel_south,panel_north);
+		area.setEditable(false);
+		addScrollPanelToPanel(panel_middle);
 
-        clientGUI.setBounds(400, 400, 750, 500);
-        addEverythingToMainPanel(clientGUI,panel_middle,panel_north,panel_south);
+		clientGUI.setUserTextColor();
+		setComponentColors(panel_south, panel_north);
 
-        area.setBackground(Color.white);
-        clientGUI.setVisible(true);
-    }
+		clientGUI.setBounds(400, 400, 750, 500);
+		addEverythingToMainPanel(clientGUI, panel_middle, panel_north, panel_south);
 
-    private void addScrollPanelToPanel(JPanel panel_middle){
-        JScrollPane scrollPane = new JScrollPane(area);
-        panel_middle.add(scrollPane);
-    }
+		area.setBackground(Color.white);
+		clientGUI.setVisible(true);
+	}
 
-    private void setComponentColors(JPanel panel_south, JPanel panel_north){
-        post.setBackground(Color.BLACK);
-        post.setForeground(Color.WHITE);
-        disconnect.setBackground(Color.BLACK);
-        disconnect.setForeground(Color.WHITE);
-        panel_north.setBackground(Color.WHITE);
-        panel_south.setBackground(Color.WHITE);
-    }
+	private void addScrollPanelToPanel(JPanel panel_middle) {
+		JScrollPane scrollPane = new JScrollPane(area);
+		panel_middle.add(scrollPane);
+	}
 
-    private void addEverythingToMainPanel(ClientGUI clientGUI, JPanel panel_middle, JPanel panel_north, JPanel panel_south){
-        JPanel c = new JPanel();
-        c.setBackground(Color.WHITE);
-        c.setBorder(new EmptyBorder(5, 5, 5, 5));
-        c.setLayout(new BorderLayout(0, 0));
-        clientGUI.setContentPane(c);
-        c.add(panel_north, BorderLayout.NORTH);
-        c.add(panel_middle, BorderLayout.CENTER);
-        c.add(panel_south, BorderLayout.SOUTH);
-        panel_north.add(disconnect);
-    }
+	private void setComponentColors(JPanel panel_south, JPanel panel_north) {
+		post.setBackground(Color.BLACK);
+		post.setForeground(Color.WHITE);
+		disconnect.setBackground(Color.BLACK);
+		disconnect.setForeground(Color.WHITE);
+		panel_north.setBackground(Color.WHITE);
+		panel_south.setBackground(Color.WHITE);
+	}
 
-    private void setAddEventListeners(){
-        field.addActionListener(this);
-        fieldUser.addActionListener(this);
-        post.addActionListener(this);
-        disconnect.addActionListener(this);
-        upload.addActionListener(this);
-    }
+	private void addEverythingToMainPanel(ClientGUI clientGUI, JPanel panel_middle, JPanel panel_north,
+			JPanel panel_south) {
+		JPanel c = new JPanel();
+		c.setBackground(Color.WHITE);
+		c.setBorder(new EmptyBorder(5, 5, 5, 5));
+		c.setLayout(new BorderLayout(0, 0));
+		clientGUI.setContentPane(c);
+		c.add(panel_north, BorderLayout.NORTH);
+		c.add(panel_middle, BorderLayout.CENTER);
+		c.add(panel_south, BorderLayout.SOUTH);
+		panel_north.add(disconnect);
+	}
 
-    private int generateRandomRGBValue(){
-        Random rand = new Random();
-        return rand.nextInt(255);
-    }
+	private void setAddEventListeners() {
+		field.addActionListener(this);
+		fieldUser.addActionListener(this);
+		post.addActionListener(this);
+		disconnect.addActionListener(this);
+		upload.addActionListener(this);
+	}
 
-    private void setUserTextColor(){
-        area.setForeground(new Color(generateRandomRGBValue(),generateRandomRGBValue(),generateRandomRGBValue()));
-    }
+	private int generateRandomRGBValue() {
+		Random rand = new Random();
+		return rand.nextInt(255);
+	}
 
-    private void showTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Calendar cal = Calendar.getInstance();
-        message.setText("Joined: " + dateFormat.format(cal.getTime()));
-    }
+	private void setUserTextColor() {
+		area.setForeground(new Color(generateRandomRGBValue(), generateRandomRGBValue(), generateRandomRGBValue()));
+	}
 
-    @Override
+	private void showTime() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		message.setText("Joined: " + dateFormat.format(cal.getTime()));
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
+		Object source = e.getSource();
 
-        if (source == post) {
-            System.out.println(field.getText());
-            posted = true;
-            
-            /** 	--ADDING HARD STUFF-- */
-            try {
-				this.clientService.send(
-						new UserInfo(fieldUser.getText()),
-						new Data_message(this.clientService.getIdClient(), 
-						new Date(), 
-						field.getText() 
-				));
-				
+		if (source == post) {
+			System.out.println(field.getText());
+			posted = true;
+
+			/** --ADDING HARD STUFF-- */
+			try {
+				this.clientService.send(new AccountInfo(new Predicat("PSEUDO", fieldUser.getText())),
+						new DataMessage(this.clientService.getIdClient(), new Date(), field.getText()));
+
 				ClientGUI.posted = false;
-                ClientGUI.field.setText("");
+				ClientGUI.field.setText("");
 			} catch (RemoteException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-            /** ------ END OF HARD STUFF -- */
-         }
+			/** ------ END OF HARD STUFF -- */
+		}
 
-        else if (source == disconnect) {
+		else if (source == disconnect) {
 
-            disconnected = true;
-            
-            /** 	--ADDING HARD STUFF-- */
-            try {
-            	//this.clientService.send(new Data_message(this.clientService.getIdClient(), new Date(), "has disconnected" ));
+			disconnected = true;
+
+			/** --ADDING HARD STUFF-- */
+			try {
+				// this.clientService.send(new Data_message(this.clientService.getIdClient(),
+				// new Date(), "has disconnected" ));
 				this.clientService.signOut();
 				ClientGUI.disconnected = false;
 			} catch (RemoteException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-            /** ------ END OF HARD STUFF -- */
-            
-            dispose();
-        }
-        
-        else if (source == upload) {
-            System.out.println("Uploading ...");
-        
-            FileData fileTest = new FileData("2.jpg" , "3.jpg");
-            	try {
-					fileTest.serializeFile();
-				} catch (IOException e1) {e1.printStackTrace();
-				} finally {
-					try {
-						this.clientService.send(new Data_message(
-								this.clientService.getIdClient(), 
-								new Date(), 
-								fileTest));
-					}catch (RemoteException e1){e1.printStackTrace();}
-				}	
-            	ClientGUI.field.setText("");
-         }
-    }
-    
-    @Override
-	public void message_added(EventMessage e) {
-    	
-        ClientGUI.area.append("\n\n" + 
-        		e.getLastMessage().getDate() +
-        		" - " +
-        		e.getLastMessage().getId_sender());
-        
-        
-        if(e.getLastMessage().getData() instanceof String) {
-        	ClientGUI.area.append(" send : " + e.getLastMessage().getData() ); 
-        }
-        
-        else if(e.getLastMessage().getData() instanceof FileData) {
-        	ClientGUI.area.append(" envoi de fichier" ); 
-        	FileData f = (FileData)e.getLastMessage().getData();
-        	try {f.unserializeFile();} catch (IOException e1) {e1.printStackTrace();}
-        }
-    }
+			/** ------ END OF HARD STUFF -- */
 
+			dispose();
+		}
 
+		else if (source == upload) {
+			System.out.println("Uploading ...");
 
-    public static String getUserName(){
-        String name = JOptionPane.showInputDialog("Enter Your Name");
-        welcome.setText("Welcome " + name);
-        return name;
-    }
-    
-    public static String getPassword(){
-        String pass = JOptionPane.showInputDialog("Enter Your pwd");
-        return pass;
-    }
-
-
-    public static void welcomeUser(String name){
-        System.out.println("Welcome " + name);
-        System.out.println("Please Enter A Message");
-    }
-
-    public static void main(String[] args) throws MalformedURLException,RemoteException, NotBoundException, SQLException, JbeeException {
-        
-    	/** looking remote interface of server  */
-        String chatServerURL = "rmi://localhost/RMIChatServer";
-        InterfaceServerSession chatServer = (InterfaceServerSession) Naming.lookup(chatServerURL);
-
-        User userService = new User(chatServer, new UserInfo(ClientGUI.getUserName(), ClientGUI.getPassword() ) );
-        /** decoupled way
-        String name = ClientGUI.getUserName(); 
-        String password = ClientGUI.getPassword();
-        Sign details = new Sign(name, password);
-               
-         **/       
-        /** you have the possibility to register the user before connect him ->   userService.register();*/
-		
-		//userService.register();
-		/** authentication -> connection -> dataReloading took in charge**/
-		userService.connectToServer();
-		
-		if(userService.isAuthentificated()) {
-			System.out.println("logged");
-			
-			/** initializing and starting the thread **/
-		
-			userService.initializeThread();
-			userService.threadAccess().start();
-			
-			/** launching GUI **/
-			new ClientGUI(userService); 
-			ClientGUI.welcomeUser(userService.getPseudo());
-			
-			
-			/** reloading the user previous messages **/
-			for(Data_message mess : userService.getMessageStack()) {
-				if(mess.getData() instanceof String) {
-					ClientGUI.area.append("\n\n" + mess.getDate() + " - " + mess.getId_sender() + "  : " + mess.getData() );
+			FileData fileTest = new FileData("2.jpg", "3.jpg");
+			try {
+				fileTest.serializeFile();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} finally {
+				try {
+					this.clientService.send(new DataMessage(this.clientService.getIdClient(), new Date(), fileTest));
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
 				}
 			}
-			
+			ClientGUI.field.setText("");
 		}
-		else System.out.println("log in : failed");
+	}
+
+	@Override
+	public void message_added(EventMessage e) {
+
+		ClientGUI.area.append("\n\n" + e.getLastMessage().getDate() + " - " + e.getLastMessage().getId_sender());
+
+		if (e.getLastMessage().getData() instanceof String) {
+			ClientGUI.area.append(" send : " + e.getLastMessage().getData());
+		}
+
+		else if (e.getLastMessage().getData() instanceof FileData) {
+			ClientGUI.area.append(" envoi de fichier");
+			FileData f = (FileData) e.getLastMessage().getData();
+			try {
+				f.unserializeFile();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	public static String getUserName() {
+		String name = JOptionPane.showInputDialog("Enter Your Name");
+		welcome.setText("Welcome " + name);
+		return name;
+	}
+
+	public static String getPassword() {
+		String pass = JOptionPane.showInputDialog("Enter Your pwd");
+		return pass;
+	}
+
+	public static void welcomeUser(String name) {
+		System.out.println("Welcome " + name);
+		System.out.println("Please Enter A Message");
+	}
+
+	public static void main(String[] args)
+			throws MalformedURLException, RemoteException, NotBoundException, SQLException, JbeeException {
+
+		/** looking remote interface of server */
+		String chatServerURL = "rmi://localhost/RMIChatServer";
+		_ServerSession chatServer = (_ServerSession) Naming.lookup(chatServerURL);
+
+		AccountInfo account_details = new AccountInfo(new Predicat("PSEUDO" , ClientGUI.getUserName() ), new Predicat("PASSWORD" ,ClientGUI.getPassword()) );
 		
-    }
+		User userService = new User(chatServer, account_details);
+		
+		/**
+		 * decoupled way String name = ClientGUI.getUserName(); String password =
+		 * ClientGUI.getPassword(); Sign details = new Sign(name, password);
+		 * 
+		 **/
+		/**
+		 * you have the possibility to register the user before connect him ->
+		 * userService.register();
+		 */
+
+		// userService.register();
+		/** authentication -> connection -> dataReloading took in charge **/
+		userService.connectToServer();
+
+		if (userService.isAuthentificated()) {
+			System.out.println("logged");
+
+			/** initializing and starting the thread **/
+
+			userService.initializeThread();
+			userService.threadAccess().start();
+
+			
+			userService.groupService().createChatGroup("LIONS");
+			
+			/** launching GUI **/
+			new ClientGUI(userService);
+			ClientGUI.welcomeUser(userService.getPseudo());
+
+			/** reloading the user previous messages **/
+			for (DataMessage mess : userService.getMessageStack()) {
+				if (mess.getData() instanceof String) {
+					ClientGUI.area
+							.append("\n\n" + mess.getDate() + " - " + mess.getId_sender() + "  : " + mess.getData());
+				}
+			}
+
+		} else
+			System.out.println("log in : failed");
+
+	}
 }

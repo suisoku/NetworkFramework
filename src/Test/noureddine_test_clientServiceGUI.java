@@ -2,9 +2,9 @@ package Test;
 
 import java.sql.SQLException;
 
-import Core.UserInfo;
 import Core.BD.InteractionBD;
-import Core.BD.connection;
+import Core.BD.ConnectionBD;
+import Core.Session.AccountInfo;
 
 public class noureddine_test_clientServiceGUI {
 
@@ -14,9 +14,9 @@ public class noureddine_test_clientServiceGUI {
     
     public static void main(String[] args) {
     	
-    	InteractionBD bd = new InteractionBD(connection.getConnection() , "USERS", "DATAMESSAGE");
+    	InteractionBD bd = new InteractionBD(ConnectionBD.getConnection() , "USERS", "DATAMESSAGE");
     	
-    	UserInfo details =  new UserInfo("baba","azerty");
+    	AccountInfo details =  new AccountInfo("baba","azerty");
         try {
 			bd.add(details);
 		} catch (SQLException e) {

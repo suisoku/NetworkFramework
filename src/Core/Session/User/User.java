@@ -3,40 +3,44 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import Core.UserInfo;
 import Core.Client.Client;
-import Core.Session.Server.InterfaceServerSession;
+import Core.Session.AccountInfo;
+import Core.Session.Server._ServerSession;
+import JBeeExceptions.JbeeException;
 import Services.DataUtilities.DataStorage;
-import Services.DataUtilities.Data_message;
+import Services.Groups.GroupService;
+import Services.DataUtilities.DataMessage;
 
-public class User extends Client implements InterfaceUser{
+public class User extends Client implements _User{
 
 	private static final long serialVersionUID = 1L;
 	
-	protected UserInfo signInDetails;
+	protected AccountInfo signInDetails;
 	protected boolean authentificated = false;
-	private InterfaceServerSession myServer;
+	private _ServerSession myServer;
 	private DataStorage messageStorage;
-
-	public User(InterfaceServerSession server, UserInfo details) throws RemoteException, SQLException  {
+	private GroupService gs;
+	
+	public User(_ServerSession server, AccountInfo details) throws RemoteException, SQLException  {
 		super(server, details.getPseudo()); 
 		
-		this.myServer = (InterfaceServerSession) server;
+		this.myServer = (_ServerSession) server;
 		this.signInDetails = details;
+		this.gs = new GroupService(details, server);
 	}
 	
 	@Override
-	public UserInfo getDetails() throws RemoteException {
+	public AccountInfo getDetails() throws RemoteException {
 		return this.signInDetails;
 	}
 
 	@Override 
-	public void send(Iterable<UserInfo> pool, Data_message data) throws RemoteException {
+	public void send(Iterable<AccountInfo> pool, DataMessage data) throws RemoteException {
 		this.myServer.sendToPool(pool, data);
 	}
 	
 	@Override
-	public void send(UserInfo user, Data_message data) throws RemoteException {
+	public void send(AccountInfo user, DataMessage data) throws RemoteException {
 		this.myServer.sendToPool(user, data);
 		this.myServer.sendToPool(this.signInDetails, data);
 	}
@@ -57,13 +61,6 @@ public class User extends Client implements InterfaceUser{
 	public void setAuthentificated(boolean t) throws RemoteException{
 		this.authentificated = t;
 	}
-
-
-//	@Override
-//	public void joinPool(InterfaceGroupe pool)  throws RemoteException{} 
-
-//	@Override
-//	public void leavePool(InterfaceGroupe pool) throws RemoteException {}
 	
 	@Override
 	public  void register() throws RemoteException, SQLException {
@@ -76,13 +73,19 @@ public class User extends Client implements InterfaceUser{
 	}
 	
 	@Override
-	public ArrayList<Data_message> getMessageStack() throws RemoteException{
-		return (ArrayList<Data_message>)this.messageStorage;
+	public ArrayList<DataMessage> getMessageStack() throws RemoteException{
+		if(this.messageStorage == null ) throw new JbeeException("Reloading Data failed or empty");
+		else return (ArrayList<DataMessage>)this.messageStorage;
 	}
 
 	@Override
-	public void reloadData(ArrayList<Data_message> bdDataMessages) throws RemoteException {
+	public void reloadData(ArrayList<DataMessage> bdDataMessages) throws RemoteException {
 		this.messageStorage = new DataStorage(this.getPseudo(), bdDataMessages);
 		
+	}
+	
+	@Override 
+	public synchronized GroupService groupService() throws RemoteException {
+		return this.gs;
 	}
 }

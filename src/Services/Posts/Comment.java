@@ -3,7 +3,7 @@ package Services.Posts;
 import java.io.Serializable;
 import java.util.Date;
 
-import Core.Session.UserInfo;
+import Core.Session.AccountInfo;
 
 public class Comment extends AbstractPost implements Serializable {
 
@@ -11,10 +11,9 @@ public class Comment extends AbstractPost implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Comment(UserInfo user , String contenu) {
+	public Comment(AccountInfo user , String contenu) {
 		   this.userPoster = user;
 	       this.textField = contenu;
-	       
 	       this.datePost = new Date();
     }
 	 

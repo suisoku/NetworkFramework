@@ -2,7 +2,7 @@ package Services.Posts;
 
 import java.util.ArrayList;
 
-import Core.Session.UserInfo;
+import Core.Session.AccountInfo;
 
 public class Liker extends AbstractInteractive {
 
@@ -14,19 +14,19 @@ public class Liker extends AbstractInteractive {
 		this.dislikeList = new ArrayList<String>();
 	}
 	
-	public void like(UserInfo u) {
+	public void like(AccountInfo u) {
 		this.likeList.add(u.getPseudo());
 	}
 	
-	public void dislike(UserInfo u) {
+	public void dislike(AccountInfo u) {
 		this.dislikeList.add(u.getPseudo());
 	}
 	
-	public void unlike(UserInfo u) {
+	public void unlike(AccountInfo u) {
 		this.likeList.remove(u.getPseudo());
 	}
 	
-	public void undislike(UserInfo u) {
+	public void undislike(AccountInfo u) {
 		this.dislikeList.remove(u.getPseudo());
 	} 
 	

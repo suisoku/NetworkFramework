@@ -7,9 +7,13 @@ import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import javax.swing.*;
 
-import Core.Serveur.Server;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import Core.BD.InteractionBD;
 import Core.Session.Server.ServerSession;
 
 class ServerGUI extends JFrame implements ActionListener {
@@ -83,7 +87,20 @@ class ServerGUI extends JFrame implements ActionListener {
     }
     
     public static void main(String[] args) throws RemoteException, MalformedURLException {
-    	ServerSession server = new ServerSession();
+    	
+    	InteractionBD personal_bd = new InteractionBD("USERS", "DATAMESSAGE");
+    	
+    	personal_bd.setPools_table("POOLS");
+    	personal_bd.setGroup_data_table("GROUP_DATA");
+    	personal_bd.setUser_pool_table("USER_POOL");
+
+    	personal_bd.setPosts_table("POSTS");
+    	personal_bd.setPool_post_table("POOL_POST");
+    	personal_bd.setComments_table("COMMENTS");
+    	
+
+    	
+    	ServerSession server = new ServerSession(personal_bd);
     	server.initialize();
     	new ServerGUI(server);
     }

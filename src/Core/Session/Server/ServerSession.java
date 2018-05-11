@@ -5,32 +5,35 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashMap;
 
-import Core.UserInfo;
 import Core.BD.InteractionBD;
-import Core.BD.connection;
-import Core.Client.ObserverClientI;
+import Core.Client._Client;
 import Core.Serveur.Server;
-import Core.Session.User.InterfaceUser;
+import Core.Session.AccountInfo;
+import Core.Session.User._User;
 import JBeeExceptions.JbeeException;
-import Services.DataUtilities.Data_message;
+import Services.DataUtilities.DataMessage;
+import Services.Groups.PoolHandler;
 
-public class ServerSession extends Server implements InterfaceServerSession{
+public class ServerSession extends Server implements _ServerSession{
 	
 	private static final long serialVersionUID = 1L;
 	private InteractionBD bd ;
 	
-	private HashMap<String, InterfaceUser> users;
+	private HashMap<String, _User> users;
+	private PoolHandler poolhandler;
 	
-	public ServerSession() throws RemoteException {
+	
+	public ServerSession(InteractionBD bd_con) throws RemoteException {
 		super();
+		users = new HashMap<String, _User>();
 		
-		bd = new InteractionBD(connection.getConnection() , "USERS", "DATAMESSAGE");
-		
-		users = new HashMap<String, InterfaceUser>();
+		this.bd = bd_con;
+		this.poolhandler = new PoolHandler(this.bd);
 	}
 	
+	
 	@Override
-	public boolean authentication(InterfaceUser user) throws RemoteException {
+	public boolean authentication(_User user) throws RemoteException {
 			try {
 				return bd.identify(user.getDetails());
 			} catch (SQLException e) {
@@ -40,7 +43,7 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	}
 	
 	@Override	
-	public InterfaceUser lookupUser(UserInfo details) throws RemoteException {
+	public _User lookupUser(AccountInfo details) throws RemoteException {
 		for(String key: users.keySet()) {
 			if(key.equals(details.getPseudo())){
 				return users.get(key);
@@ -50,9 +53,9 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	}
 	
 	@Override
-	public boolean register(UserInfo details) throws RemoteException, SQLException {
+	public boolean register(AccountInfo details) throws RemoteException, SQLException {
 		if(!bd.identify(details)) {
-			bd.add(details);
+			bd.addAccount(details);
 			return true;
 		}
 		else return false;
@@ -62,14 +65,14 @@ public class ServerSession extends Server implements InterfaceServerSession{
 
 	
 	@Override
-	public synchronized void sendToPool(UserInfo user_details , Data_message data) throws RemoteException {
+	public synchronized void sendToPool(AccountInfo user_details , DataMessage data) throws RemoteException {
 		
 		
 		
 		try {
 			if(bd.lookUser(user_details)) {
 				
-				InterfaceUser right_user = this.lookupUser(user_details);
+				_User right_user = this.lookupUser(user_details);
 				if(right_user != null) {	right_user.update(data);	}
 				
 				bd.storeIntoBD(user_details.getPseudo(), data);
@@ -82,8 +85,8 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	
 	/** not tested yet **/
 	@Override
-	public synchronized void sendToPool(Iterable<UserInfo> pool , Data_message data) throws RemoteException {
-		for(UserInfo u : pool) {
+	public synchronized void sendToPool(Iterable<AccountInfo> pool , DataMessage data) throws RemoteException {
+		for(AccountInfo u : pool) {
 			sendToPool(u , data);
 		}
 	}
@@ -91,9 +94,9 @@ public class ServerSession extends Server implements InterfaceServerSession{
  
     /** synchronized allow safe resources accessing  **/
 	@Override
-    public synchronized void connectClient(ObserverClientI u) throws RemoteException {
+    public synchronized void connectClient(_Client u) throws RemoteException {
 		
-		InterfaceUser user =  (InterfaceUser)u;
+		_User user =  (_User)u;
 		if(authentication(user)) {
 			
 			this.users.put(user.getPseudo(), user);
@@ -108,7 +111,7 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	}
 	
 	@Override
-	public synchronized void disconnectClient(ObserverClientI u) throws RemoteException {
+	public synchronized void disconnectClient(_Client u) throws RemoteException {
 		 this.users.remove(u.getIdClient());
 	}
 	
@@ -116,5 +119,11 @@ public class ServerSession extends Server implements InterfaceServerSession{
 	public synchronized int getNbClients() throws RemoteException {
 		return this.users.size();
 	}
+	
+	@Override	
+	public synchronized PoolHandler p_handler() throws RemoteException {
+		return this.poolhandler;
+	}
+	
 	
 }

@@ -12,7 +12,7 @@ import Services.DataUtilities.events.EventMessage;
  * DataStorage : an array list with the capability of firing events when 
  * the inner state change (for now : adding)
  */
-public class DataStorage extends ArrayList<Data_message>{
+public class DataStorage extends ArrayList<DataMessage>{
 
 	
 	private static final long serialVersionUID = 1L;
@@ -20,7 +20,7 @@ public class DataStorage extends ArrayList<Data_message>{
 	private final EventListenerList listeners = new EventListenerList();
 	
 	
-	public DataStorage(String id_client, ArrayList<Data_message> payload) {
+	public DataStorage(String id_client, ArrayList<DataMessage> payload) {
 		super(payload);
 		this.id_client = id_client;
 	}
@@ -47,7 +47,7 @@ public class DataStorage extends ArrayList<Data_message>{
 	 * Add and emit event
 	 */
 	@Override
-	public boolean add(Data_message message) {
+	public boolean add(DataMessage message) {
 		
 		fireEvent(new EventMessage(message));
 		return super.add(message);

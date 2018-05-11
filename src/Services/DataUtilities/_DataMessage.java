@@ -1,10 +1,10 @@
 package Services.DataUtilities;
 
-import java.rmi.Remote;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Date;
 
-public interface DataInterface extends Remote{
+public interface _DataMessage extends Serializable{
 
 	public String getId_sender() throws RemoteException;
 	public Date getDate() throws RemoteException;
