@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -86,22 +87,25 @@ class ServerGUI extends JFrame implements ActionListener {
         }
     }
     
-    public static void main(String[] args) throws RemoteException, MalformedURLException {
+    public static void main(String[] args) throws RemoteException, MalformedURLException, SQLException {
     	
     	InteractionBD personal_bd = new InteractionBD("USERS", "DATAMESSAGE");
     	
     	personal_bd.setPools_table("POOLS");
     	personal_bd.setGroup_data_table("GROUP_DATA");
     	personal_bd.setUser_pool_table("USER_POOL");
-
     	personal_bd.setPosts_table("POSTS");
     	personal_bd.setPool_post_table("POOL_POST");
     	personal_bd.setComments_table("COMMENTS");
+    	personal_bd.setProfile_table("PROFIL");
     	
-
+    	personal_bd.creationsSchema();
     	
     	ServerSession server = new ServerSession(personal_bd);
     	server.initialize();
+    	
+    	server.poolHandler().reloadEverything();
+    	
     	new ServerGUI(server);
     }
 }

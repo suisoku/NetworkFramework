@@ -1,20 +1,33 @@
 package Services.Posts;
 
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 import Core.Session.AccountInfo;
 
-public abstract class AbstractPost  {
+public abstract class AbstractPost implements Serializable {
 
-	protected AccountInfo userPoster;
-	protected Date datePost;
-	protected UUID idPost  = UUID.randomUUID();
-	protected String textField;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private AccountInfo userPoster;
+	private Date datePost;
+	private UUID idPost; 
+	private String textField;
 	
 
+	public AbstractPost(String textfield , AccountInfo user, UUID id_param) {
+		this.datePost = new Date();
+		this.textField = textfield;
+		idPost = id_param;
+		this.userPoster = user;
+	}
+	
 
+	
 	public String getTextField() {
 		return this.textField;
 	}

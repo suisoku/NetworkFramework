@@ -7,14 +7,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.rmi.*;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-import javax.swing.*;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import Core.BD.Predicat;
@@ -148,8 +158,9 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 
 			/** --ADDING HARD STUFF-- */
 			try {
-				this.clientService.send(new AccountInfo(new Predicat("PSEUDO", fieldUser.getText())),
-						new DataMessage(this.clientService.getIdClient(), new Date(), field.getText()));
+				/**this.clientService.send(new AccountInfo(new Predicat("PSEUDO", fieldUser.getText())),
+						new DataMessage(this.clientService.getIdClient(), new Date(), field.getText())); **/
+				this.clientService.groupService().sendToChatGroup(new DataMessage(this.clientService.getIdClient(), new Date(), field.getText()), "LIONS");
 
 				ClientGUI.posted = false;
 				ClientGUI.field.setText("");
@@ -240,7 +251,8 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 		/** looking remote interface of server */
 		String chatServerURL = "rmi://localhost/RMIChatServer";
 		_ServerSession chatServer = (_ServerSession) Naming.lookup(chatServerURL);
-
+		
+		
 		AccountInfo account_details = new AccountInfo(new Predicat("PSEUDO" , ClientGUI.getUserName() ), new Predicat("PASSWORD" ,ClientGUI.getPassword()) );
 		
 		User userService = new User(chatServer, account_details);
@@ -268,8 +280,64 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 			userService.threadAccess().start();
 
 			
-			userService.groupService().createChatGroup("LIONS");
+			//userService.groupService().createChatGroup("LIONS");
 			
+			//userService.groupService().joinPool("LIONS");
+			
+			 //userService.groupService().createPubPool("TESTPOST");
+			// userService.groupService().joinPool("TESTPOST");
+			 
+			 //Publication p = new Publication(userService.getDetails() , "Les chats" , "les chats c bien ouououee");
+			 //userService.groupService().addPost(p, "TESTPOST");
+			 
+		//	 HashMap<UUID , Publication> map_post = userService.groupService().getMapPosts("TESTPOST");
+			 
+			 
+			 /** ---------------------**/
+			// Publication p = map_post.values().iterator().next();
+			// System.out.println(p.getIdPost());
+			// System.out.println(map_post.keySet().iterator().next());
+			 //System.out.println("test" + map_post.get(p.getIdPost()).getTitlePost());
+			 //Comment c = new Comment(userService.getDetails(), "Commentaire1");
+			 
+			//userService.groupService().addComment(c, p.getIdPost(), "TESTPOST");
+			
+		/*	for(Publication ps : map_post.values()) {
+				System.out.println(ps.getTitlePost() + "  : " + ps.getIdPost());
+				for(Comment cc : ps.getCommentList())System.out.println("Comment   : " + cc.getTextField());
+			}*/
+			
+		/*	ArrayList<Object> list = new ArrayList<Object>();
+			list.add(userService.getDetails().getPseudo());
+			list.add("sssss@sss");
+			list.add("gggggggggggggggg");
+			
+			Profile p = new Profile(userService.getDetails(), list);
+			
+			//userService.createProfile(p);
+			
+			// en 2 eme temps
+
+			
+			userService.editProfile(p);
+			userService.loadProfile();
+			for(Object o : userService.getProfile().getListElements())System.out.println(o);
+			
+			
+			
+			
+			for(ArrayList<Object> list : userService.searchInBD("EMP","KING")) {
+				for(Object o : list)System.out.println(o);
+			}
+			*/
+			
+			for(String s : userService.getAllChatGroups()) {
+				System.out.println(s);
+			}
+			System.out.println("----------");
+			for(String s : userService.getAllPostpools()) {
+				System.out.println(s);
+			}
 			/** launching GUI **/
 			new ClientGUI(userService);
 			ClientGUI.welcomeUser(userService.getPseudo());
@@ -284,6 +352,5 @@ public class ClientGUI extends JFrame implements ActionListener, ArrayListener {
 
 		} else
 			System.out.println("log in : failed");
-
 	}
 }

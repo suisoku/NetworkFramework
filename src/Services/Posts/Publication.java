@@ -2,7 +2,6 @@ package Services.Posts;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -10,12 +9,12 @@ import Core.Session.AccountInfo;
 import Services.DataUtilities.FileData;
 
 // on doit utiliser de la sérialisation pour stokcer nos posts vu qu'on utilise le RMI
-public class Publication extends AbstractPost implements Serializable, InterfaceInteractible {
+public class Publication extends AbstractPost implements Serializable, _Interactible {
 
 	private static final long serialVersionUID = 1L;
 	private String titlePost;
 	private HashMap<Integer, FileData> imageList = new HashMap<Integer, FileData>() ;
-	private HashMap<UUID, Comment> commentList = new HashMap<UUID, Comment>() ;
+	private HashMap<UUID, Comment> commentMap ;
 	
 	private AbstractInteractive interactor ;
 	// pour traiter chaque type de contenu apart on ajoute un type pour l'identifier
@@ -30,14 +29,17 @@ public class Publication extends AbstractPost implements Serializable, Interface
 
 	
 	public Publication(AccountInfo user, String title, String textField) {
-		this.userPoster = user;
+		super(textField,user, UUID.randomUUID());
 		this.titlePost = title;
-		this.textField = textField;
-		this.datePost = new Date();
+	}
+	
+	public Publication(AccountInfo user, String title, String textField , UUID idbd) {
+		super(textField,user, idbd);
+		this.titlePost = title;
 	}
 	
 	public void loadComments(HashMap<UUID, Comment> commentList) {
-		this.commentList = commentList;
+		this.commentMap = commentList;
 	}
 
 
@@ -52,15 +54,15 @@ public class Publication extends AbstractPost implements Serializable, Interface
 	}
 	
 	public void addComment(Comment c) {
-		 this.commentList.put(c.getIdPost(), c);
+		 this.commentMap.put(c.getIdPost(), c);
 	}
 
 	public void editComment(UUID id , String contenu) {
-		 this.commentList.get(id).editTextField(contenu);
+		 this.commentMap.get(id).editTextField(contenu);
 	}
 	
 	public void deleteComment(UUID id) {
-		 this.commentList.remove(id);
+		 this.commentMap.remove(id);
 	}
 	
 
@@ -75,8 +77,9 @@ public class Publication extends AbstractPost implements Serializable, Interface
 		this.interactor = reaction;
 	}
 
+	
 	public Collection<Comment> getCommentList(){
-	  return this.commentList.values();
+	  return this.commentMap.values();
   }
 
 	// partage ===> idpost et iduser

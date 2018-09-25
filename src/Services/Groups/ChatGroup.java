@@ -18,6 +18,7 @@ public class ChatGroup extends AbstractGroup implements Serializable{
 	
 	public ChatGroup(String groupName)  {
 		super(groupName);
+		this.messageStorage = new DataStorage(this.groupName);
 	}
 
 	public void initializeStorage(ArrayList<DataMessage> bdDataMessages) {
@@ -29,6 +30,9 @@ public class ChatGroup extends AbstractGroup implements Serializable{
 		else return (ArrayList<DataMessage>)this.messageStorage;
 	}
 
+    public void update(DataMessage message) throws RemoteException {
+        messageStorage.add(message);
+    }
 }
 
 

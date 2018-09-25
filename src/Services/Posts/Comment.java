@@ -1,7 +1,7 @@
 package Services.Posts;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.UUID;
 
 import Core.Session.AccountInfo;
 
@@ -12,10 +12,12 @@ public class Comment extends AbstractPost implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public Comment(AccountInfo user , String contenu) {
-		   this.userPoster = user;
-	       this.textField = contenu;
-	       this.datePost = new Date();
+		   super(contenu, user , UUID.randomUUID());
     }
+	
+	public Comment(AccountInfo user , String contenu , UUID idbd) {
+		   super(contenu, user , idbd);
+	}
 	 
 
 }
